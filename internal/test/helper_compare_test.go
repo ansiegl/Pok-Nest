@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/strfmt/conv"
 	"github.com/stretchr/testify/require"

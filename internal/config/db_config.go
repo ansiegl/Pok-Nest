@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 )
 
 // The DatabaseMigrationTable name is baked into the binary

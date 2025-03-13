@@ -8,9 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/config"
+	"github.com/ansiegl/Pok-Nest.git/internal/mailer/transport"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/jordan-wright/email"
 	"github.com/rs/zerolog/log"
 )

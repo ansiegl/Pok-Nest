@@ -20,7 +20,7 @@ import (
 	"strings"
 	"text/template"
 
-	"allaboutapps.dev/aw/go-starter/scripts/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/scripts/internal/util"
 )
 
 // https://blog.carlmjohnson.net/post/2016-11-27-how-to-use-go-generate/
@@ -45,7 +45,7 @@ var (
 package handlers
 
 import (
-	"allaboutapps.dev/aw/go-starter/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	{{- range .SubPkgs }}
 	"{{ . }}"
 	{{- end }}

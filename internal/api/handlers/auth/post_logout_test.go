@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/api/middleware"
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/middleware"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )

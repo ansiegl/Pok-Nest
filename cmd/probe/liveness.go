@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/handlers/common"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/internal/util/command"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/common"
+	"github.com/ansiegl/Pok-Nest.git/internal/config"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/util/command"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )

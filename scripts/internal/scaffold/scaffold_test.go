@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util"
-	"allaboutapps.dev/aw/go-starter/scripts/internal/scaffold"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/scripts/internal/scaffold"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

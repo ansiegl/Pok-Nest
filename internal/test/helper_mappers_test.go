@@ -3,7 +3,7 @@ package test_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/stretchr/testify/assert"
 )
 

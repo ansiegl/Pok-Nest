@@ -1,6 +1,6 @@
 package main
 
-import "allaboutapps.dev/aw/go-starter/cmd"
+import "github.com/ansiegl/Pok-Nest.git/cmd"
 
 func main() {
 	cmd.Execute()

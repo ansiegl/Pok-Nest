@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 )
 
 func GetPKCECodeVerifier() (string, error) {

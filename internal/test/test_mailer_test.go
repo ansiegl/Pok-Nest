@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/mailer/transport"
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/mailer/transport"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

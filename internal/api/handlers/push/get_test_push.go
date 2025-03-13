@@ -3,9 +3,9 @@ package push
 import (
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/api/auth"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/auth"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/labstack/echo/v4"
 )
 

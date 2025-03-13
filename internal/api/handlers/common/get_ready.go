@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/labstack/echo/v4"
 )
 

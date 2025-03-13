@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/config"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/stretchr/testify/assert"
 )
 

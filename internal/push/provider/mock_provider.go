@@ -3,7 +3,7 @@ package provider
 import (
 	"errors"
 
-	"allaboutapps.dev/aw/go-starter/internal/push"
+	"github.com/ansiegl/Pok-Nest.git/internal/push"
 	"github.com/rs/zerolog/log"
 )
 

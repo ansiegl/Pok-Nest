@@ -3,7 +3,7 @@ package auth
 import (
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/models"
 )
 
 type AuthenticationResult struct {

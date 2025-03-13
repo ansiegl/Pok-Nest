@@ -5,7 +5,7 @@ package cmd
 import (
 	"log"
 
-	"allaboutapps.dev/aw/go-starter/scripts/internal/handlers"
+	"github.com/ansiegl/Pok-Nest.git/scripts/internal/handlers"
 	"github.com/spf13/cobra"
 )
 

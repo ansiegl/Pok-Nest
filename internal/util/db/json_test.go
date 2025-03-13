@@ -3,9 +3,9 @@ package db_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/util/db"
+	"github.com/ansiegl/Pok-Nest.git/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/util/db"
 	"github.com/stretchr/testify/require"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"

@@ -8,12 +8,12 @@ import (
 	"regexp"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/test"
-	"allaboutapps.dev/aw/go-starter/internal/test/mocks"
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/test/mocks"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 
-	apitypes "allaboutapps.dev/aw/go-starter/internal/types"
+	apitypes "github.com/ansiegl/Pok-Nest.git/internal/types"
 	"github.com/go-openapi/swag"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

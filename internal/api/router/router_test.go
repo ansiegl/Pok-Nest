@@ -3,9 +3,9 @@ package router_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api"
-	"allaboutapps.dev/aw/go-starter/internal/config"
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/config"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/stretchr/testify/require"
 )
 

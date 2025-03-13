@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
-	"allaboutapps.dev/aw/go-starter/internal/types"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
+	"github.com/ansiegl/Pok-Nest.git/internal/types"
 	"github.com/go-openapi/swag"
 	"github.com/stretchr/testify/require"
 )

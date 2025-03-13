@@ -3,7 +3,7 @@ package db_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/util/db"
+	"github.com/ansiegl/Pok-Nest.git/internal/util/db"
 	"github.com/go-openapi/swag"
 	"github.com/stretchr/testify/assert"
 )

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"allaboutapps.dev/aw/go-starter/cmd/db"
-	"allaboutapps.dev/aw/go-starter/cmd/env"
-	"allaboutapps.dev/aw/go-starter/cmd/probe"
-	"allaboutapps.dev/aw/go-starter/cmd/server"
-	"allaboutapps.dev/aw/go-starter/internal/config"
+	"github.com/ansiegl/Pok-Nest.git/cmd/db"
+	"github.com/ansiegl/Pok-Nest.git/cmd/env"
+	"github.com/ansiegl/Pok-Nest.git/cmd/probe"
+	"github.com/ansiegl/Pok-Nest.git/cmd/server"
+	"github.com/ansiegl/Pok-Nest.git/internal/config"
 	"github.com/spf13/cobra"
 )
 

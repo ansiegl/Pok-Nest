@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/push"
-	"allaboutapps.dev/aw/go-starter/internal/push/provider"
+	"github.com/ansiegl/Pok-Nest.git/internal/push"
+	"github.com/ansiegl/Pok-Nest.git/internal/push/provider"
 )
 
 func WithTestPusher(t *testing.T, closure func(p *push.Service, db *sql.DB)) {

@@ -3,8 +3,8 @@ package data_test
 import (
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/data"
-	"allaboutapps.dev/aw/go-starter/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/data"
+	"github.com/ansiegl/Pok-Nest.git/internal/models"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/api/httperrors"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

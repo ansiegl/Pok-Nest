@@ -1,4 +1,4 @@
-module allaboutapps.dev/aw/go-starter
+module github.com/ansiegl/Pok-Nest.git
 
 go 1.24.0
 

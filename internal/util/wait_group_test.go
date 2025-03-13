@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"allaboutapps.dev/aw/go-starter/internal/util"
+	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/stretchr/testify/assert"
 )
 

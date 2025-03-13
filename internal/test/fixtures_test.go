@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"testing"
 
-	"allaboutapps.dev/aw/go-starter/internal/models"
-	"allaboutapps.dev/aw/go-starter/internal/test"
+	"github.com/ansiegl/Pok-Nest.git/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/volatiletech/null/v8"
