@@ -51,6 +51,49 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	return str
 }
 
+// Enum values for PokemonType
+const (
+	PokemonTypeFire     string = "Fire"
+	PokemonTypeWater    string = "Water"
+	PokemonTypeGrass    string = "Grass"
+	PokemonTypeElectric string = "Electric"
+	PokemonTypePsychic  string = "Psychic"
+	PokemonTypeGhost    string = "Ghost"
+	PokemonTypeDragon   string = "Dragon"
+	PokemonTypeFairy    string = "Fairy"
+	PokemonTypeDark     string = "Dark"
+	PokemonTypeFighting string = "Fighting"
+	PokemonTypeBug      string = "Bug"
+	PokemonTypeNormal   string = "Normal"
+	PokemonTypeRock     string = "Rock"
+	PokemonTypeGround   string = "Ground"
+	PokemonTypePoison   string = "Poison"
+	PokemonTypeSteel    string = "Steel"
+	PokemonTypeIce      string = "Ice"
+)
+
+func AllPokemonType() []string {
+	return []string{
+		PokemonTypeFire,
+		PokemonTypeWater,
+		PokemonTypeGrass,
+		PokemonTypeElectric,
+		PokemonTypePsychic,
+		PokemonTypeGhost,
+		PokemonTypeDragon,
+		PokemonTypeFairy,
+		PokemonTypeDark,
+		PokemonTypeFighting,
+		PokemonTypeBug,
+		PokemonTypeNormal,
+		PokemonTypeRock,
+		PokemonTypeGround,
+		PokemonTypePoison,
+		PokemonTypeSteel,
+		PokemonTypeIce,
+	}
+}
+
 // Enum values for ProviderType
 const (
 	ProviderTypeFCM string = "fcm"

@@ -8,12 +8,23 @@ definitions:
     type: object
     required:
       - id
+      - username
+      - password
     properties:
       id:
         type: string
         format: uuid4
         description: ID of user
         example: 891d37d3-c74f-493e-aea8-af73efd92016
+      username:
+        type: string
+        format: email
+        description: Email of user
+        example: example@pokemaster.com
+      password:
+        type: string
+        description: user password
+        example: Secure_Password1234
   GetUserInfoResponse:
     type: object
     required:

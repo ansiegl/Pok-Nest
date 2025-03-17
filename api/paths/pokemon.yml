@@ -1,0 +1,19 @@
+swagger: '2.0'
+info:
+  title: github.com/ansiegl/Pok-Nest.git
+  version: 0.1.0
+paths:
+  /api/v1/pokemon/csv:
+    get:
+      description: Get all Pokémon as a JSON array, emulating a CSV file.
+      tags:
+        - pokemon
+      summary: Retrieve a list of all Pokémon as JSON, instead of CSV
+      operationId: GetPokemonAsJson
+      responses:
+        "200":
+          description: JSON representation of all Pokémon data, emulating CSV
+          schema:
+            type: array
+            items:
+              $ref: "../definitions/pokemon.yml#/definitions/Pokemon"

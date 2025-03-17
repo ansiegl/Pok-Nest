@@ -6,14 +6,18 @@ package models
 var TableNames = struct {
 	AccessTokens        string
 	AppUserProfiles     string
+	CollectionPokemon   string
 	PasswordResetTokens string
+	Pokemon             string
 	PushTokens          string
 	RefreshTokens       string
 	Users               string
 }{
 	AccessTokens:        "access_tokens",
 	AppUserProfiles:     "app_user_profiles",
+	CollectionPokemon:   "collection_pokemon",
 	PasswordResetTokens: "password_reset_tokens",
+	Pokemon:             "pokemon",
 	PushTokens:          "push_tokens",
 	RefreshTokens:       "refresh_tokens",
 	Users:               "users",

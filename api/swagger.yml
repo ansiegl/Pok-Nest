@@ -61,6 +61,101 @@ paths:
       responses:
         "200":
           description: ModuleName @ Commit (BuildDate)
+  /api/v1/Collection/pokemon/{pokemonId}:
+    get:
+      tags:
+      - collection
+      summary: Search for a Pokémon by its ID
+      operationId: GetPokemonById
+      parameters:
+      - type: string
+        description: The Pokémon's ID to search for
+        name: pokemonId
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Pokémon found successfully
+          schema:
+            $ref: '#/definitions/getPokemonByIdOKBody'
+        "404":
+          description: Pokémon not found
+    put:
+      description: Edit a Pokémon in the user's collection
+      tags:
+      - collection
+      summary: Edit Pokémon details in the collection
+      operationId: PutEditPokemonInCollection
+      parameters:
+      - type: string
+        description: The Pokémon's ID to edit
+        name: pokemonId
+        in: path
+        required: true
+      - name: caught
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/getPokemonByIdOKBody'
+      responses:
+        "200":
+          description: Pokémon updated in collection successfully
+        "400":
+          description: Invalid input data (e.g., invalid date or nickname)
+        "404":
+          description: Pokémon or collection not found
+    delete:
+      tags:
+      - collection
+      summary: Delete Pokémon from collection
+      operationId: DeletePokemonFromCollection
+      parameters:
+      - type: string
+        description: Pokémon's ID to delete
+        name: pokemonId
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Pokémon removed from collection successfully
+        "404":
+          description: Pokémon or collection not found
+  /api/v1/Collection/sort:
+    get:
+      description: Sort Pokémon collection based on a specified field
+      tags:
+      - collection
+      summary: Sort Pokémon collection by field (e.g., name, caught date, or type)
+      operationId: GetSortedCollection
+      parameters:
+      - enum:
+        - name
+        - caught
+        - type_1
+        - type_2
+        type: string
+        description: The field by which to sort the collection (e.g., `name`, `caught`,
+          `type_1`, `type_2`)
+        name: sortBy
+        in: query
+        required: true
+      - enum:
+        - asc
+        - desc
+        type: string
+        description: The order of sorting (ascending or descending)
+        name: order
+        in: query
+        required: true
+      responses:
+        "200":
+          description: Sorted Pokémon collection
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/collection'
+        "400":
+          description: Invalid sorting parameters
   /api/v1/auth/change-password:
     post:
       security:
@@ -280,6 +375,45 @@ paths:
           description: GetUserInfoResponse
           schema:
             $ref: '#/definitions/getUserInfoResponse'
+  /api/v1/pokemon/csv:
+    get:
+      description: Get all Pokémon as a JSON array, emulating a CSV file.
+      tags:
+      - pokemon
+      summary: Retrieve a list of all Pokémon as JSON, instead of CSV
+      operationId: GetPokemonAsJson
+      responses:
+        "200":
+          description: JSON representation of all Pokémon data, emulating CSV
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pokemon'
+  /api/v1/pokemon/{pokemonId}:
+    post:
+      tags:
+      - collection
+      summary: Add Pokémon to collection
+      operationId: PostAddPokemonToCollection
+      parameters:
+      - type: string
+        description: The Pokémon's ID to add to the collection
+        name: pokemonId
+        in: path
+        required: true
+      - name: caught
+        in: body
+        schema:
+          $ref: '#/definitions/getPokemonByIdOKBody'
+      responses:
+        "201":
+          description: Pokémon added to collection successfully
+        "400":
+          description: Invalid input data (e.g., invalid date or nickname)
+        "404":
+          description: Pokémon or user not found
+        "409":
+          description: Pokémon is already in the collection
   /api/v1/push/test:
     get:
       security:
@@ -336,6 +470,57 @@ paths:
         "200":
           description: OK
 definitions:
+  collection:
+    type: object
+    required:
+    - pokemon_id
+    - user_id
+    properties:
+      caught:
+        description: caught at date
+        type: string
+        format: date
+        example: "2023-04-15"
+      nickname:
+        description: nickname of pokemon
+        type: string
+        example: pika
+      pokemon_id:
+        description: ID of pokemon
+        type: string
+        format: uuid
+        example: f14d44a9-86f7-4875-b4db-213cd5b7430b
+      user_id:
+        description: ID of user
+        type: string
+        format: uuid
+        example: 6e8c36ad-85c9-4f2e-9175-15b87656a93b
+  getPokemonByIdOKBody:
+    type: object
+    required:
+    - pokemon_id
+    - user_id
+    properties:
+      caught:
+        description: caught at date
+        type: string
+        format: date
+        example: "2023-04-15"
+      nickname:
+        description: nickname of pokemon
+        type: string
+        example: pika
+      pokemon_id:
+        description: ID of pokemon
+        type: string
+        format: uuid
+        example: f14d44a9-86f7-4875-b4db-213cd5b7430b
+      user_id:
+        description: ID of user
+        type: string
+        format: uuid
+        example: 6e8c36ad-85c9-4f2e-9175-15b87656a93b
+    x-go-gen-location: operations
   getUserInfoResponse:
     type: object
     required:
@@ -574,6 +759,40 @@ definitions:
     enum:
     - asc
     - desc
+  pokemon:
+    type: object
+    required:
+    - pokemon_id
+    - name
+    - type_1
+    - generation
+    - legendary
+    properties:
+      generation:
+        description: generation of pokemon
+        type: integer
+        example: 1
+      legendary:
+        description: is the pokemon legendary?
+        type: boolean
+        example: false
+      name:
+        description: name of pokemon
+        type: string
+        example: pikachu
+      pokemon_id:
+        description: ID of pokemon
+        type: string
+        format: uuid4
+        example: 891d37d3-c74f-493e-aea8-af73efd92016
+      type_1:
+        description: first type of pokemon
+        type: string
+        example: electric
+      type_2:
+        description: second type of pokemon
+        type: string
+        example: flying
   postChangePasswordPayload:
     type: object
     required:

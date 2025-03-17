@@ -1,7 +1,7 @@
 -- +migrate Up
 CREATE TABLE users (
     id uuid NOT NULL DEFAULT uuid_generate_v4 (),
-    username varchar(255),
+    username text,
     "password" text,
     is_active bool NOT NULL,
     -- TODO: use user_scope enum as "scopes user_scope[]" when supported

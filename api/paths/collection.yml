@@ -1,0 +1,124 @@
+swagger: '2.0'
+info:
+  title: github.com/ansiegl/Pok-Nest.git
+  version: 0.1.0
+paths:
+  /api/v1/pokemon/{pokemonId}:
+    post:
+      tags:
+        - collection
+      summary: Add Pokémon to collection
+      operationId: PostAddPokemonToCollection
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: The Pokémon's ID to add to the collection
+        - name: caught
+          in: body
+          schema:
+            $ref: '../definitions/collection.yml#/definitions/Collection'
+      responses:
+        "201":
+          description: Pokémon added to collection successfully
+        "400":
+          description: Invalid input data (e.g., invalid date or nickname)
+        "409":
+          description: Pokémon is already in the collection
+        "404":
+          description: Pokémon or user not found
+  /api/v1/Collection/pokemon/{pokemonId}:
+    get:
+      summary: Search for a Pokémon by its ID
+      tags:
+        - collection
+      operationId: GetPokemonById
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: The Pokémon's ID to search for
+      responses:
+        "200":
+          description: Pokémon found successfully
+          schema:
+            $ref: '../definitions/collection.yml#/definitions/Collection'
+        "404":
+          description: Pokémon not found
+    delete:
+      tags:
+        - collection
+      summary: Delete Pokémon from collection
+      operationId: DeletePokemonFromCollection
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: Pokémon's ID to delete
+      responses:
+        "200":
+          description: Pokémon removed from collection successfully
+        "404":
+          description: Pokémon or collection not found
+    put:
+      description: Edit a Pokémon in the user's collection
+      tags:
+        - collection
+      summary: Edit Pokémon details in the collection
+      operationId: PutEditPokemonInCollection
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: The Pokémon's ID to edit
+        - name: caught
+          in: body
+          required: true
+          schema:
+            $ref: '../definitions/collection.yml#/definitions/Collection'
+      responses:
+        "200":
+          description: Pokémon updated in collection successfully
+        "400":
+          description: Invalid input data (e.g., invalid date or nickname)
+        "404":
+          description: Pokémon or collection not found
+  /api/v1/Collection/sort:
+    get:
+      description: Sort Pokémon collection based on a specified field
+      tags:
+        - collection
+      summary: Sort Pokémon collection by field (e.g., name, caught date, or type)
+      operationId: GetSortedCollection
+      parameters:
+        - name: sortBy
+          in: query
+          required: true
+          type: string
+          enum:
+            - name
+            - caught
+            - type_1
+            - type_2
+          description: The field by which to sort the collection (e.g., `name`, `caught`, `type_1`, `type_2`)
+        - name: order
+          in: query
+          required: true
+          type: string
+          enum:
+            - asc
+            - desc
+          description: The order of sorting (ascending or descending)
+      responses:
+        "200":
+          description: Sorted Pokémon collection
+          schema:
+            type: array
+            items:
+              $ref: '../definitions/collection.yml#/definitions/Collection'
+        "400":
+          description: Invalid sorting parameters

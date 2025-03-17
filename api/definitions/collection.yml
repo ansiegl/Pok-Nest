@@ -1,0 +1,31 @@
+swagger: "2.0"
+info:
+  title: github.com/ansiegl/Pok-Nest.git
+  version: 0.1.0
+paths: {}
+definitions:
+  Collection:
+    type: object
+    required:
+      - pokemon_id
+      - user_id
+    properties:
+      pokemon_id:
+        type: string
+        format: uuid
+        description: ID of pokemon
+        example: f14d44a9-86f7-4875-b4db-213cd5b7430b
+      user_id:
+        type: string
+        format: uuid
+        description: ID of user
+        example: 6e8c36ad-85c9-4f2e-9175-15b87656a93b
+      nickname:
+        type: string
+        description: nickname of pokemon
+        example: pika
+      caught:
+        type: string
+        format: date
+        description: caught at date
+        example: "2023-04-15"

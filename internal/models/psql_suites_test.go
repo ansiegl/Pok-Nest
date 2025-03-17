@@ -10,7 +10,11 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("AppUserProfiles", testAppUserProfilesUpsert)
 
+	t.Run("CollectionPokemons", testCollectionPokemonsUpsert)
+
 	t.Run("PasswordResetTokens", testPasswordResetTokensUpsert)
+
+	t.Run("Pokemons", testPokemonsUpsert)
 
 	t.Run("PushTokens", testPushTokensUpsert)
 

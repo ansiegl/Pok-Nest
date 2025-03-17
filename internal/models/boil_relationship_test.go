@@ -10,6 +10,8 @@ import "testing"
 func TestToOne(t *testing.T) {
 	t.Run("AccessTokenToUserUsingUser", testAccessTokenToOneUserUsingUser)
 	t.Run("AppUserProfileToUserUsingUser", testAppUserProfileToOneUserUsingUser)
+	t.Run("CollectionPokemonToPokemonUsingPokemon", testCollectionPokemonToOnePokemonUsingPokemon)
+	t.Run("CollectionPokemonToUserUsingUser", testCollectionPokemonToOneUserUsingUser)
 	t.Run("PasswordResetTokenToUserUsingUser", testPasswordResetTokenToOneUserUsingUser)
 	t.Run("PushTokenToUserUsingUser", testPushTokenToOneUserUsingUser)
 	t.Run("RefreshTokenToUserUsingUser", testRefreshTokenToOneUserUsingUser)
@@ -24,7 +26,9 @@ func TestOneToOne(t *testing.T) {
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToMany(t *testing.T) {
+	t.Run("PokemonToCollectionPokemons", testPokemonToManyCollectionPokemons)
 	t.Run("UserToAccessTokens", testUserToManyAccessTokens)
+	t.Run("UserToCollectionPokemons", testUserToManyCollectionPokemons)
 	t.Run("UserToPasswordResetTokens", testUserToManyPasswordResetTokens)
 	t.Run("UserToPushTokens", testUserToManyPushTokens)
 	t.Run("UserToRefreshTokens", testUserToManyRefreshTokens)
@@ -35,6 +39,8 @@ func TestToMany(t *testing.T) {
 func TestToOneSet(t *testing.T) {
 	t.Run("AccessTokenToUserUsingAccessTokens", testAccessTokenToOneSetOpUserUsingUser)
 	t.Run("AppUserProfileToUserUsingAppUserProfile", testAppUserProfileToOneSetOpUserUsingUser)
+	t.Run("CollectionPokemonToPokemonUsingCollectionPokemons", testCollectionPokemonToOneSetOpPokemonUsingPokemon)
+	t.Run("CollectionPokemonToUserUsingCollectionPokemons", testCollectionPokemonToOneSetOpUserUsingUser)
 	t.Run("PasswordResetTokenToUserUsingPasswordResetTokens", testPasswordResetTokenToOneSetOpUserUsingUser)
 	t.Run("PushTokenToUserUsingPushTokens", testPushTokenToOneSetOpUserUsingUser)
 	t.Run("RefreshTokenToUserUsingRefreshTokens", testRefreshTokenToOneSetOpUserUsingUser)
@@ -57,7 +63,9 @@ func TestOneToOneRemove(t *testing.T) {}
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyAdd(t *testing.T) {
+	t.Run("PokemonToCollectionPokemons", testPokemonToManyAddOpCollectionPokemons)
 	t.Run("UserToAccessTokens", testUserToManyAddOpAccessTokens)
+	t.Run("UserToCollectionPokemons", testUserToManyAddOpCollectionPokemons)
 	t.Run("UserToPasswordResetTokens", testUserToManyAddOpPasswordResetTokens)
 	t.Run("UserToPushTokens", testUserToManyAddOpPushTokens)
 	t.Run("UserToRefreshTokens", testUserToManyAddOpRefreshTokens)

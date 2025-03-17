@@ -36,12 +36,17 @@ func (o *SwaggerSpec) initHandlerCache() {
 	o.Handlers["HEAD"] = make(map[string]bool)
 	o.Handlers["PATCH"] = make(map[string]bool)
 
+	o.Handlers["DELETE"]["/api/v1/Collection/pokemon/{pokemonId}"] = true
 	o.Handlers["GET"]["/-/healthy"] = true
+	o.Handlers["GET"]["/api/v1/pokemon/csv"] = true
+	o.Handlers["GET"]["/api/v1/Collection/pokemon/{pokemonId}"] = true
 	o.Handlers["GET"]["/api/v1/push/test"] = true
 	o.Handlers["GET"]["/-/ready"] = true
+	o.Handlers["GET"]["/api/v1/Collection/sort"] = true
 	o.Handlers["GET"]["/swagger.yml"] = true
 	o.Handlers["GET"]["/api/v1/auth/userinfo"] = true
 	o.Handlers["GET"]["/-/version"] = true
+	o.Handlers["POST"]["/api/v1/pokemon/{pokemonId}"] = true
 	o.Handlers["POST"]["/api/v1/auth/change-password"] = true
 	o.Handlers["POST"]["/api/v1/auth/forgot-password/complete"] = true
 	o.Handlers["POST"]["/api/v1/auth/forgot-password"] = true
@@ -50,4 +55,5 @@ func (o *SwaggerSpec) initHandlerCache() {
 	o.Handlers["POST"]["/api/v1/auth/refresh"] = true
 	o.Handlers["POST"]["/api/v1/auth/register"] = true
 	o.Handlers["PUT"]["/api/v1/push/token"] = true
+	o.Handlers["PUT"]["/api/v1/Collection/pokemon/{pokemonId}"] = true
 }
