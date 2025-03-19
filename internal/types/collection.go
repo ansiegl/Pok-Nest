@@ -21,7 +21,7 @@ type Collection struct {
 
 	// pokemon
 	// Required: true
-	Pokemon *CollectionPokemon `json:"Pokemon"`
+	Pokemon *CollectionPokemon `json:"pokemon"`
 }
 
 // Validate validates this collection
@@ -40,16 +40,16 @@ func (m *Collection) Validate(formats strfmt.Registry) error {
 
 func (m *Collection) validatePokemon(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon", "body", m.Pokemon); err != nil {
+	if err := validate.Required("pokemon", "body", m.Pokemon); err != nil {
 		return err
 	}
 
 	if m.Pokemon != nil {
 		if err := m.Pokemon.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("Pokemon")
+				return ve.ValidateName("pokemon")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("Pokemon")
+				return ce.ValidateName("pokemon")
 			}
 			return err
 		}
@@ -77,9 +77,9 @@ func (m *Collection) contextValidatePokemon(ctx context.Context, formats strfmt.
 	if m.Pokemon != nil {
 		if err := m.Pokemon.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("Pokemon")
+				return ve.ValidateName("pokemon")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("Pokemon")
+				return ce.ValidateName("pokemon")
 			}
 			return err
 		}
@@ -174,7 +174,7 @@ func (m *CollectionPokemon) Validate(formats strfmt.Registry) error {
 
 func (m *CollectionPokemon) validateGeneration(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon"+"."+"generation", "body", m.Generation); err != nil {
+	if err := validate.Required("pokemon"+"."+"generation", "body", m.Generation); err != nil {
 		return err
 	}
 
@@ -183,7 +183,7 @@ func (m *CollectionPokemon) validateGeneration(formats strfmt.Registry) error {
 
 func (m *CollectionPokemon) validateLegendary(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon"+"."+"legendary", "body", m.Legendary); err != nil {
+	if err := validate.Required("pokemon"+"."+"legendary", "body", m.Legendary); err != nil {
 		return err
 	}
 
@@ -192,7 +192,7 @@ func (m *CollectionPokemon) validateLegendary(formats strfmt.Registry) error {
 
 func (m *CollectionPokemon) validateName(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon"+"."+"name", "body", m.Name); err != nil {
+	if err := validate.Required("pokemon"+"."+"name", "body", m.Name); err != nil {
 		return err
 	}
 
@@ -201,11 +201,11 @@ func (m *CollectionPokemon) validateName(formats strfmt.Registry) error {
 
 func (m *CollectionPokemon) validatePokemonID(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon"+"."+"pokemon_id", "body", m.PokemonID); err != nil {
+	if err := validate.Required("pokemon"+"."+"pokemon_id", "body", m.PokemonID); err != nil {
 		return err
 	}
 
-	if err := validate.FormatOf("Pokemon"+"."+"pokemon_id", "body", "uuid4", m.PokemonID.String(), formats); err != nil {
+	if err := validate.FormatOf("pokemon"+"."+"pokemon_id", "body", "uuid4", m.PokemonID.String(), formats); err != nil {
 		return err
 	}
 
@@ -214,7 +214,7 @@ func (m *CollectionPokemon) validatePokemonID(formats strfmt.Registry) error {
 
 func (m *CollectionPokemon) validateType1(formats strfmt.Registry) error {
 
-	if err := validate.Required("Pokemon"+"."+"type_1", "body", m.Type1); err != nil {
+	if err := validate.Required("pokemon"+"."+"type_1", "body", m.Type1); err != nil {
 		return err
 	}
 

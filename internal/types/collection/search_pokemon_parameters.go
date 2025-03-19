@@ -13,6 +13,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // NewSearchPokemonParams creates a new SearchPokemonParams object
@@ -23,14 +24,10 @@ func NewSearchPokemonParams() SearchPokemonParams {
 		// initialize parameters with default values
 
 		limitDefault = int64(10)
-
-		offsetDefault = int64(0)
 	)
 
 	return SearchPokemonParams{
 		Limit: &limitDefault,
-
-		Offset: &offsetDefault,
 	}
 }
 
@@ -47,11 +44,12 @@ type SearchPokemonParams struct {
 	  In: query
 	*/
 	Generation *int64 `query:"generation"`
-	/*Whether to search for legendary Pokémon
+	/*whether to search for legendary Pokémon
 	  In: query
 	*/
 	Legendary *bool `query:"legendary"`
-	/*Number of Pokémon to return per page
+	/*number of Pokémon to return per page
+	  Maximum: 20
 	  In: query
 	  Default: 10
 	*/
@@ -60,11 +58,6 @@ type SearchPokemonParams struct {
 	  In: query
 	*/
 	Name *string `query:"name"`
-	/*Starting point for the collection
-	  In: query
-	  Default: 0
-	*/
-	Offset *int64 `query:"offset"`
 	/*Pokémon type to search for
 	  In: query
 	*/
@@ -102,11 +95,6 @@ func (o *SearchPokemonParams) BindRequest(r *http.Request, route *middleware.Mat
 		res = append(res, err)
 	}
 
-	qOffset, qhkOffset, _ := qs.GetOK("offset")
-	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	qType, qhkType, _ := qs.GetOK("type")
 	if err := o.bindType(qType, qhkType, route.Formats); err != nil {
 		res = append(res, err)
@@ -133,11 +121,11 @@ func (o *SearchPokemonParams) Validate(formats strfmt.Registry) error {
 	// Required: false
 	// AllowEmptyValue: false
 
-	// name
-	// Required: false
-	// AllowEmptyValue: false
+	if err := o.validateLimit(formats); err != nil {
+		res = append(res, err)
+	}
 
-	// offset
+	// name
 	// Required: false
 	// AllowEmptyValue: false
 
@@ -215,6 +203,25 @@ func (o *SearchPokemonParams) bindLimit(rawData []string, hasKey bool, formats s
 	}
 	o.Limit = &value
 
+	if err := o.validateLimit(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateLimit carries on validations for parameter Limit
+func (o *SearchPokemonParams) validateLimit(formats strfmt.Registry) error {
+
+	// Required: false
+	if o.Limit == nil {
+		return nil
+	}
+
+	if err := validate.MaximumInt("limit", "query", *o.Limit, 20, false); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -232,29 +239,6 @@ func (o *SearchPokemonParams) bindName(rawData []string, hasKey bool, formats st
 	}
 
 	o.Name = &raw
-
-	return nil
-}
-
-// bindOffset binds and validates parameter Offset from query.
-func (o *SearchPokemonParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: false
-	// AllowEmptyValue: false
-	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewSearchPokemonParams()
-		return nil
-	}
-
-	value, err := swag.ConvertInt64(raw)
-	if err != nil {
-		return errors.InvalidType("offset", "query", "int64", raw)
-	}
-	o.Offset = &value
 
 	return nil
 }

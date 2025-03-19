@@ -7,14 +7,14 @@ paths:
     post:
       tags:
         - collection
-      summary: Add Pokémon to collection
+      summary: add Pokémon to collection
       operationId: postAddPokemonToCollection
       parameters:
         - name: pokemonId
           in: path
           required: true
           type: string
-          description: The Pokémon's ID to add to the collection
+          description: Pokémon's ID to add to the collection
         - name: caught
           in: body
           schema:
@@ -23,7 +23,7 @@ paths:
         "201":
           description: Pokémon added to collection successfully
         "400":
-          description: Invalid input data (e.g., invalid date or nickname)
+          description: invalid input data (e.g., invalid date or nickname)
         "409":
           description: Pokémon is already in the collection
         "404":
@@ -54,28 +54,23 @@ paths:
           in: query
           required: false
           type: boolean
-          description: Whether to search for legendary Pokémon
+          description: whether to search for legendary Pokémon
         - name: limit
           in: query
           required: false
           type: integer
-          description: Number of Pokémon to return per page
+          description: number of Pokémon to return per page
           default: 10
-        - name: offset
-          in: query
-          required: false
-          type: integer
-          description: Starting point for the collection
-          default: 0
+          maximum: 20
       responses:
         "200":
-          description: Search results for Pokémon
+          description: search results for Pokémon
           schema:
             type: array
             items:
               $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
         "400":
-          description: Invalid search parameters
+          description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
     delete:
       tags:

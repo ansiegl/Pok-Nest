@@ -7,7 +7,7 @@ definitions:
   Collection:
     type: object
     required:
-      - Pokemon
+      - pokemon
     properties:
-      Pokemon:
+      pokemon:
         $ref: './pokemon.yml#/definitions/Pokemon'

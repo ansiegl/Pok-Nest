@@ -36,7 +36,7 @@ type PostAddPokemonToCollectionParams struct {
 	  In: body
 	*/
 	Caught *types.Collection
-	/*The Pokémon's ID to add to the collection
+	/*Pokémon's ID to add to the collection
 	  Required: true
 	  In: path
 	*/

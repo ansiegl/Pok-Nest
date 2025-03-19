@@ -51,6 +51,7 @@ func (o *SwaggerSpec) initHandlerCache() {
 	o.Handlers["POST"]["/api/v1/auth/register"] = true
 	o.Handlers["PUT"]["/api/v1/push/token"] = true
 	o.Handlers["DELETE"]["/api/v1/collection/pokemon/{pokemonId}"] = true
+	o.Handlers["GET"]["/api/v1/pokemon"] = true
 	o.Handlers["POST"]["/api/v1/pokemon/{pokemonId}"] = true
 	o.Handlers["PUT"]["/api/v1/collection/pokemon/{pokemonId}"] = true
 	o.Handlers["GET"]["/api/v1/collection/pokemon"] = true
