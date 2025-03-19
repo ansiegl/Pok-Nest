@@ -19,41 +19,16 @@ import (
 // swagger:model collection
 type Collection struct {
 
-	// caught at date
-	// Example: 2023-04-15
-	// Format: date
-	Caught strfmt.Date `json:"caught,omitempty"`
-
-	// nickname of pokemon
-	// Example: pika
-	Nickname string `json:"nickname,omitempty"`
-
-	// ID of pokemon
-	// Example: f14d44a9-86f7-4875-b4db-213cd5b7430b
+	// pokemon
 	// Required: true
-	// Format: uuid
-	PokemonID *strfmt.UUID `json:"pokemon_id"`
-
-	// ID of user
-	// Example: 6e8c36ad-85c9-4f2e-9175-15b87656a93b
-	// Required: true
-	// Format: uuid
-	UserID *strfmt.UUID `json:"user_id"`
+	Pokemon *CollectionPokemon `json:"Pokemon"`
 }
 
 // Validate validates this collection
 func (m *Collection) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateCaught(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePokemonID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateUserID(formats); err != nil {
+	if err := m.validatePokemon(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -63,46 +38,53 @@ func (m *Collection) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Collection) validateCaught(formats strfmt.Registry) error {
-	if swag.IsZero(m.Caught) { // not required
-		return nil
+func (m *Collection) validatePokemon(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon", "body", m.Pokemon); err != nil {
+		return err
 	}
 
-	if err := validate.FormatOf("caught", "body", "date", m.Caught.String(), formats); err != nil {
-		return err
+	if m.Pokemon != nil {
+		if err := m.Pokemon.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Pokemon")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("Pokemon")
+			}
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (m *Collection) validatePokemonID(formats strfmt.Registry) error {
-
-	if err := validate.Required("pokemon_id", "body", m.PokemonID); err != nil {
-		return err
-	}
-
-	if err := validate.FormatOf("pokemon_id", "body", "uuid", m.PokemonID.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Collection) validateUserID(formats strfmt.Registry) error {
-
-	if err := validate.Required("user_id", "body", m.UserID); err != nil {
-		return err
-	}
-
-	if err := validate.FormatOf("user_id", "body", "uuid", m.UserID.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this collection based on context it is used
+// ContextValidate validate this collection based on the context it is used
 func (m *Collection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidatePokemon(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Collection) contextValidatePokemon(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Pokemon != nil {
+		if err := m.Pokemon.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Pokemon")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("Pokemon")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -117,6 +99,144 @@ func (m *Collection) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Collection) UnmarshalBinary(b []byte) error {
 	var res Collection
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// CollectionPokemon collection pokemon
+//
+// swagger:model CollectionPokemon
+type CollectionPokemon struct {
+
+	// generation of pokemon
+	// Example: 1
+	// Required: true
+	Generation *int64 `json:"generation"`
+
+	// is the pokemon legendary?
+	// Example: false
+	// Required: true
+	Legendary *bool `json:"legendary"`
+
+	// name of pokemon
+	// Example: pikachu
+	// Required: true
+	Name *string `json:"name"`
+
+	// ID of pokemon
+	// Example: 891d37d3-c74f-493e-aea8-af73efd92016
+	// Required: true
+	// Format: uuid4
+	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
+
+	// first type of pokemon
+	// Example: electric
+	// Required: true
+	Type1 *string `json:"type_1"`
+
+	// second type of pokemon
+	// Example: flying
+	Type2 string `json:"type_2,omitempty"`
+}
+
+// Validate validates this collection pokemon
+func (m *CollectionPokemon) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateGeneration(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLegendary(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePokemonID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType1(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *CollectionPokemon) validateGeneration(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon"+"."+"generation", "body", m.Generation); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CollectionPokemon) validateLegendary(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon"+"."+"legendary", "body", m.Legendary); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CollectionPokemon) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon"+"."+"name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CollectionPokemon) validatePokemonID(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon"+"."+"pokemon_id", "body", m.PokemonID); err != nil {
+		return err
+	}
+
+	if err := validate.FormatOf("Pokemon"+"."+"pokemon_id", "body", "uuid4", m.PokemonID.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CollectionPokemon) validateType1(formats strfmt.Registry) error {
+
+	if err := validate.Required("Pokemon"+"."+"type_1", "body", m.Type1); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this collection pokemon based on context it is used
+func (m *CollectionPokemon) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *CollectionPokemon) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *CollectionPokemon) UnmarshalBinary(b []byte) error {
+	var res CollectionPokemon
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

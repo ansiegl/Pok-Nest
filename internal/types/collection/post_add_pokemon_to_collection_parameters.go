@@ -26,7 +26,7 @@ func NewPostAddPokemonToCollectionParams() PostAddPokemonToCollectionParams {
 // PostAddPokemonToCollectionParams contains all the bound params for the post add pokemon to collection operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PostAddPokemonToCollection
+// swagger:parameters postAddPokemonToCollection
 type PostAddPokemonToCollectionParams struct {
 
 	// HTTP Request Object
@@ -35,7 +35,7 @@ type PostAddPokemonToCollectionParams struct {
 	/*
 	  In: body
 	*/
-	Caught *types.GetPokemonByIDOKBody
+	Caught *types.Collection
 	/*The Pokémon's ID to add to the collection
 	  Required: true
 	  In: path
@@ -54,7 +54,7 @@ func (o *PostAddPokemonToCollectionParams) BindRequest(r *http.Request, route *m
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.GetPokemonByIDOKBody
+		var body types.Collection
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("caught", "body", "", err))
 		} else {

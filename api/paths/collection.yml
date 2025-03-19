@@ -8,7 +8,7 @@ paths:
       tags:
         - collection
       summary: Add Pokémon to collection
-      operationId: PostAddPokemonToCollection
+      operationId: postAddPokemonToCollection
       parameters:
         - name: pokemonId
           in: path
@@ -28,30 +28,60 @@ paths:
           description: Pokémon is already in the collection
         "404":
           description: Pokémon or user not found
-  /api/v1/Collection/pokemon/{pokemonId}:
+  /api/v1/collection/pokemon:
     get:
-      summary: Search for a Pokémon by its ID
       tags:
         - collection
-      operationId: GetPokemonById
+      summary: search Pokémon by attribute (name, type, etc.)
+      operationId: searchPokemon
       parameters:
-        - name: pokemonId
-          in: path
-          required: true
+        - name: name
+          in: query
+          required: false
           type: string
-          description: The Pokémon's ID to search for
+          description: Pokémon name to search for
+        - name: type
+          in: query
+          required: false
+          type: string
+          description: Pokémon type to search for
+        - name: generation
+          in: query
+          required: false
+          type: integer
+          description: Pokémon generation to search for
+        - name: legendary
+          in: query
+          required: false
+          type: boolean
+          description: Whether to search for legendary Pokémon
+        - name: limit
+          in: query
+          required: false
+          type: integer
+          description: Number of Pokémon to return per page
+          default: 10
+        - name: offset
+          in: query
+          required: false
+          type: integer
+          description: Starting point for the collection
+          default: 0
       responses:
         "200":
-          description: Pokémon found successfully
+          description: Search results for Pokémon
           schema:
-            $ref: '../definitions/collection.yml#/definitions/Collection'
-        "404":
-          description: Pokémon not found
+            type: array
+            items:
+              $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
+        "400":
+          description: Invalid search parameters
+  /api/v1/collection/pokemon/{pokemonId}:
     delete:
       tags:
         - collection
-      summary: Delete Pokémon from collection
-      operationId: DeletePokemonFromCollection
+      summary: delete Pokémon from collection
+      operationId: deletePokemonFromCollection
       parameters:
         - name: pokemonId
           in: path
@@ -64,17 +94,17 @@ paths:
         "404":
           description: Pokémon or collection not found
     put:
-      description: Edit a Pokémon in the user's collection
+      description: edit a Pokémon in user's collection
       tags:
         - collection
-      summary: Edit Pokémon details in the collection
-      operationId: PutEditPokemonInCollection
+      summary: edit Pokémon details in collection
+      operationId: putEditPokemonInCollection
       parameters:
         - name: pokemonId
           in: path
           required: true
           type: string
-          description: The Pokémon's ID to edit
+          description: Pokémon's ID to edit
         - name: caught
           in: body
           required: true
@@ -84,41 +114,7 @@ paths:
         "200":
           description: Pokémon updated in collection successfully
         "400":
-          description: Invalid input data (e.g., invalid date or nickname)
+          description: Invalid input data
         "404":
           description: Pokémon or collection not found
-  /api/v1/Collection/sort:
-    get:
-      description: Sort Pokémon collection based on a specified field
-      tags:
-        - collection
-      summary: Sort Pokémon collection by field (e.g., name, caught date, or type)
-      operationId: GetSortedCollection
-      parameters:
-        - name: sortBy
-          in: query
-          required: true
-          type: string
-          enum:
-            - name
-            - caught
-            - type_1
-            - type_2
-          description: The field by which to sort the collection (e.g., `name`, `caught`, `type_1`, `type_2`)
-        - name: order
-          in: query
-          required: true
-          type: string
-          enum:
-            - asc
-            - desc
-          description: The order of sorting (ascending or descending)
-      responses:
-        "200":
-          description: Sorted Pokémon collection
-          schema:
-            type: array
-            items:
-              $ref: '../definitions/collection.yml#/definitions/Collection'
-        "400":
-          description: Invalid sorting parameters
+ 

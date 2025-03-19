@@ -23,7 +23,7 @@ func NewDeletePokemonFromCollectionParams() DeletePokemonFromCollectionParams {
 // DeletePokemonFromCollectionParams contains all the bound params for the delete pokemon from collection operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters DeletePokemonFromCollection
+// swagger:parameters deletePokemonFromCollection
 type DeletePokemonFromCollectionParams struct {
 
 	// HTTP Request Object

@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -23,12 +24,12 @@ import (
 
 // Pokemon is an object representing the database table.
 type Pokemon struct {
-	PokemonID  string `boil:"pokemon_id" json:"pokemon_id" toml:"pokemon_id" yaml:"pokemon_id"`
-	Name       string `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Type1      string `boil:"type_1" json:"type_1" toml:"type_1" yaml:"type_1"`
-	Type2      string `boil:"type_2" json:"type_2" toml:"type_2" yaml:"type_2"`
-	Generation int    `boil:"generation" json:"generation" toml:"generation" yaml:"generation"`
-	Legendary  bool   `boil:"legendary" json:"legendary" toml:"legendary" yaml:"legendary"`
+	PokemonID  string      `boil:"pokemon_id" json:"pokemon_id" toml:"pokemon_id" yaml:"pokemon_id"`
+	Name       string      `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Type1      string      `boil:"type_1" json:"type_1" toml:"type_1" yaml:"type_1"`
+	Type2      null.String `boil:"type_2" json:"type_2,omitempty" toml:"type_2" yaml:"type_2,omitempty"`
+	Generation int         `boil:"generation" json:"generation" toml:"generation" yaml:"generation"`
+	Legendary  bool        `boil:"legendary" json:"legendary" toml:"legendary" yaml:"legendary"`
 
 	R *pokemonR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L pokemonL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -104,14 +105,14 @@ var PokemonWhere = struct {
 	PokemonID  whereHelperstring
 	Name       whereHelperstring
 	Type1      whereHelperstring
-	Type2      whereHelperstring
+	Type2      whereHelpernull_String
 	Generation whereHelperint
 	Legendary  whereHelperbool
 }{
 	PokemonID:  whereHelperstring{field: "\"pokemon\".\"pokemon_id\""},
 	Name:       whereHelperstring{field: "\"pokemon\".\"name\""},
 	Type1:      whereHelperstring{field: "\"pokemon\".\"type_1\""},
-	Type2:      whereHelperstring{field: "\"pokemon\".\"type_2\""},
+	Type2:      whereHelpernull_String{field: "\"pokemon\".\"type_2\""},
 	Generation: whereHelperint{field: "\"pokemon\".\"generation\""},
 	Legendary:  whereHelperbool{field: "\"pokemon\".\"legendary\""},
 }
@@ -145,8 +146,8 @@ type pokemonL struct{}
 
 var (
 	pokemonAllColumns            = []string{"pokemon_id", "name", "type_1", "type_2", "generation", "legendary"}
-	pokemonColumnsWithoutDefault = []string{"name", "type_1", "type_2", "generation", "legendary"}
-	pokemonColumnsWithDefault    = []string{"pokemon_id"}
+	pokemonColumnsWithoutDefault = []string{"name", "type_1", "generation", "legendary"}
+	pokemonColumnsWithDefault    = []string{"pokemon_id", "type_2"}
 	pokemonPrimaryKeyColumns     = []string{"pokemon_id"}
 	pokemonGeneratedColumns      = []string{}
 )

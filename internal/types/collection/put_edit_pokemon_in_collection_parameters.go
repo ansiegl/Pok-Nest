@@ -27,7 +27,7 @@ func NewPutEditPokemonInCollectionParams() PutEditPokemonInCollectionParams {
 // PutEditPokemonInCollectionParams contains all the bound params for the put edit pokemon in collection operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PutEditPokemonInCollection
+// swagger:parameters putEditPokemonInCollection
 type PutEditPokemonInCollectionParams struct {
 
 	// HTTP Request Object
@@ -37,8 +37,8 @@ type PutEditPokemonInCollectionParams struct {
 	  Required: true
 	  In: body
 	*/
-	Caught *types.GetPokemonByIDOKBody
-	/*The Pokémon's ID to edit
+	Caught *types.Collection
+	/*Pokémon's ID to edit
 	  Required: true
 	  In: path
 	*/
@@ -56,7 +56,7 @@ func (o *PutEditPokemonInCollectionParams) BindRequest(r *http.Request, route *m
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.GetPokemonByIDOKBody
+		var body types.Collection
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("caught", "body", ""))
