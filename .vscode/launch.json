@@ -12,7 +12,8 @@
             "program": "${workspaceFolder}",
             "env": {},
             "args": [
-                "server"
+                "db",
+                "seed"
             ]
         },
         {

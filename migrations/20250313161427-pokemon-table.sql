@@ -8,6 +8,7 @@ CREATE TYPE pokemon_type AS ENUM (
     'Ghost',
     'Dragon',
     'Fairy',
+    'Flying',
     'Dark',
     'Fighting',
     'Bug',

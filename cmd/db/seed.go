@@ -16,7 +16,7 @@ import (
 )
 
 func newSeed() *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "seed",
 		Short: "Inserts or updates fixtures to the database.",
 		Long:  `Uses upsert to add test data to the current environment.`,
@@ -24,6 +24,8 @@ func newSeed() *cobra.Command {
 			seedCmdFunc()
 		},
 	}
+
+	return cmd
 }
 
 func seedCmdFunc() {
@@ -67,6 +69,20 @@ func ApplySeedFixtures(ctx context.Context, config config.Server) error {
 		for _, fixture := range fixtures {
 			if err := fixture.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
 				log.Error().Err(err).Msg("Failed to upsert fixture")
+				return err
+			}
+		}
+
+		// get pokemon data
+		pokemons, err := data.LoadPokemonFromCSV()
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to load Pokemon from CSV")
+			return err
+		}
+
+		for _, pokemon := range pokemons {
+			if err := pokemon.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
+				log.Error().Err(err).Msg("Failed to upsert Pokemon")
 				return err
 			}
 		}

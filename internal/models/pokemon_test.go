@@ -581,7 +581,7 @@ func testPokemonsSelect(t *testing.T) {
 }
 
 var (
-	pokemonDBTypes = map[string]string{`PokemonID`: `uuid`, `Name`: `text`, `Type1`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Type2`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Generation`: `integer`, `Legendary`: `boolean`}
+	pokemonDBTypes = map[string]string{`PokemonID`: `uuid`, `Name`: `text`, `Type1`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Type2`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Generation`: `integer`, `Legendary`: `boolean`}
 	_              = bytes.MinRead
 )
 

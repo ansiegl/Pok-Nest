@@ -61,6 +61,7 @@ const (
 	PokemonTypeGhost    string = "Ghost"
 	PokemonTypeDragon   string = "Dragon"
 	PokemonTypeFairy    string = "Fairy"
+	PokemonTypeFlying   string = "Flying"
 	PokemonTypeDark     string = "Dark"
 	PokemonTypeFighting string = "Fighting"
 	PokemonTypeBug      string = "Bug"
@@ -82,6 +83,7 @@ func AllPokemonType() []string {
 		PokemonTypeGhost,
 		PokemonTypeDragon,
 		PokemonTypeFairy,
+		PokemonTypeFlying,
 		PokemonTypeDark,
 		PokemonTypeFighting,
 		PokemonTypeBug,
