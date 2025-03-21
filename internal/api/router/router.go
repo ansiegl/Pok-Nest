@@ -190,6 +190,16 @@ func Init(s *api.Server) {
 
 		// Your other endpoints, typically secured by bearer auth, available at /api/v1/**
 		APIV1Push: s.Echo.Group("/api/v1/push", middleware.Auth(s)),
+
+		APIV1Collection: s.Echo.Group("/api/v1/collection", middleware.AuthWithConfig(middleware.AuthConfig{
+			S:    s,
+			Mode: middleware.AuthModeRequired,
+		})),
+
+		APIV1Pokemon: s.Echo.Group("/api/v1/pokemon", middleware.AuthWithConfig(middleware.AuthConfig{
+			S:    s,
+			Mode: middleware.AuthModeTry,
+		})),
 	}
 
 	// ---

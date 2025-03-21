@@ -40,25 +40,25 @@ type SearchPokemonParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Pokémon generation to search for
+	/*pokemon generation to search for
 	  In: query
 	*/
 	Generation *int64 `query:"generation"`
-	/*whether to search for legendary Pokémon
+	/*whether to search for legendary pokemon
 	  In: query
 	*/
 	Legendary *bool `query:"legendary"`
-	/*number of Pokémon to return per page
+	/*number of pokemon to return per page
 	  Maximum: 20
 	  In: query
 	  Default: 10
 	*/
 	Limit *int64 `query:"limit"`
-	/*Pokémon name to search for
+	/*pokemon name to search for
 	  In: query
 	*/
 	Name *string `query:"name"`
-	/*Pokémon type to search for
+	/*pokemon type to search for
 	  In: query
 	*/
 	Type *string `query:"type"`

@@ -5,6 +5,7 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/auth"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/common"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/pokemon"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/push"
 	"github.com/labstack/echo/v4"
 )
@@ -24,6 +25,8 @@ func AttachAllRoutes(s *api.Server) {
 		common.GetReadyRoute(s),
 		common.GetSwaggerRoute(s),
 		common.GetVersionRoute(s),
+		pokemon.GetPokemonDownloadRoute(s),
+		pokemon.GetPokemonRoute(s),
 		push.GetPushTestRoute(s),
 		push.PostUpdatePushTokenRoute(s),
 	}

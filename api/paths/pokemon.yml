@@ -7,25 +7,66 @@ paths:
     get:
       tags:
         - pokemon
-      summary: retrieve all Pokémon data as CSV/JSON
+      summary: retrieve all pokemon data as JSON
       operationId: getPokemonAsJson
       produces:
         - application/json
-        - text/csv
       parameters:
         - name: limit
           in: query
           required: false
           type: integer
-          description: The number of Pokémon to return per page (default is 10)
+          description: number of pokemon to return per page
           default: 10
           maximum: 20
+        - name: offset
+          in: query
+          required: false
+          type: integer
+          description: number of pokemon to skip before returning results
+          default: 0
+          minimum: 0
       responses:
         "200":
-          description: paginated Pokémon data in CSV/JSON format
+          description: paginated pokemon data in JSON format
           schema:
-            type: array
-            items:
-              $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
+            type: object
+            properties: 
+              data:
+                type: array
+                items:
+                  $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
+              pagination:
+                type: object
+                properties: 
+                  total:
+                    type: integer
+                    description: total number of pokemon available
+                  limit:
+                    type: integer
+                    description: number of pokemon returned per page 
+                  offset:
+                    type: integer
+                    description: number of pokemon skipped
         "400":
           description: invalid pagination parameters
+  /api/v1/pokemon/download:
+    get:
+      tags:
+        - pokemon
+      summary: download all pokemon data as a CSV file
+      operationId: downloadPokemonCSV
+      produces:
+        - text/csv
+      responses:
+        "200":
+          description: pokemon data in CSV format
+          headers:
+            Content-Disposition:
+              type: string
+              description: 'attachment; filename=pokemon.csv'
+          schema:
+            type: string
+            format: binary
+        "500":
+          description: internal server error

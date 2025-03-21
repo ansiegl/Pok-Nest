@@ -5,66 +5,70 @@ info:
 paths:
   /api/v1/pokemon/{pokemonId}:
     post:
+      security:
+        - Bearer: []
       tags:
         - collection
-      summary: add Pokémon to collection
+      summary: add pokemon to collection
       operationId: postAddPokemonToCollection
       parameters:
         - name: pokemonId
           in: path
           required: true
           type: string
-          description: Pokémon's ID to add to the collection
+          description: pokemon's ID to add to the collection
         - name: caught
           in: body
           schema:
             $ref: '../definitions/collection.yml#/definitions/Collection'
       responses:
         "201":
-          description: Pokémon added to collection successfully
+          description: pokemon added to collection successfully
         "400":
           description: invalid input data (e.g., invalid date or nickname)
         "409":
-          description: Pokémon is already in the collection
+          description: pokemon is already in the collection
         "404":
-          description: Pokémon or user not found
+          description: pokemon or user not found
   /api/v1/collection/pokemon:
     get:
+      security:
+        - Bearer: []
       tags:
         - collection
-      summary: search Pokémon by attribute (name, type, etc.)
+      summary: search pokemon by attribute (name, type, etc.)
       operationId: searchPokemon
       parameters:
         - name: name
           in: query
           required: false
           type: string
-          description: Pokémon name to search for
+          description: pokemon name to search for
         - name: type
           in: query
           required: false
           type: string
-          description: Pokémon type to search for
+          description: pokemon type to search for
         - name: generation
           in: query
           required: false
           type: integer
-          description: Pokémon generation to search for
+          description: pokemon generation to search for
         - name: legendary
           in: query
           required: false
           type: boolean
-          description: whether to search for legendary Pokémon
+          description: whether to search for legendary pokemon
         - name: limit
           in: query
           required: false
           type: integer
-          description: number of Pokémon to return per page
+          description: number of pokemon to return per page
           default: 10
           maximum: 20
       responses:
         "200":
-          description: search results for Pokémon
+          description: search results for pokemon
           schema:
             type: array
             items:
@@ -73,33 +77,37 @@ paths:
           description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
     delete:
+      security:
+        - Bearer: []
       tags:
         - collection
-      summary: delete Pokémon from collection
+      summary: delete pokemon from collection
       operationId: deletePokemonFromCollection
       parameters:
         - name: pokemonId
           in: path
           required: true
           type: string
-          description: Pokémon's ID to delete
+          description: pokemon's ID to delete
       responses:
         "200":
-          description: Pokémon removed from collection successfully
+          description: pokemon removed from collection successfully
         "404":
-          description: Pokémon or collection not found
+          description: pokemon or collection not found
     put:
-      description: edit a Pokémon in user's collection
+      security:
+        - Bearer: []
+      description: edit a pokemon in user's collection
       tags:
         - collection
-      summary: edit Pokémon details in collection
+      summary: edit pokemon details in collection
       operationId: putEditPokemonInCollection
       parameters:
         - name: pokemonId
           in: path
           required: true
           type: string
-          description: Pokémon's ID to edit
+          description: pokemon's ID to edit
         - name: caught
           in: body
           required: true
@@ -107,9 +115,9 @@ paths:
             $ref: '../definitions/collection.yml#/definitions/Collection'
       responses:
         "200":
-          description: Pokémon updated in collection successfully
+          description: pokemon updated in collection successfully
         "400":
-          description: Invalid input data
+          description: invalid input data
         "404":
-          description: Pokémon or collection not found
+          description: pokemon or collection not found
  

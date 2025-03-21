@@ -29,7 +29,7 @@ type DeletePokemonFromCollectionParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Pokémon's ID to delete
+	/*pokemon's ID to delete
 	  Required: true
 	  In: path
 	*/

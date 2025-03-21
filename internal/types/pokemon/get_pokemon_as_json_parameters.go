@@ -23,11 +23,14 @@ func NewGetPokemonAsJSONParams() GetPokemonAsJSONParams {
 	var (
 		// initialize parameters with default values
 
-		limitDefault = int64(10)
+		limitDefault  = int64(10)
+		offsetDefault = int64(0)
 	)
 
 	return GetPokemonAsJSONParams{
 		Limit: &limitDefault,
+
+		Offset: &offsetDefault,
 	}
 }
 
@@ -40,12 +43,18 @@ type GetPokemonAsJSONParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*The number of Pokémon to return per page (default is 10)
+	/*number of pokemon to return per page
 	  Maximum: 20
 	  In: query
 	  Default: 10
 	*/
 	Limit *int64 `query:"limit"`
+	/*number of pokemon to skip before returning results
+	  Minimum: 0
+	  In: query
+	  Default: 0
+	*/
+	Offset *int64 `query:"offset"`
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -64,6 +73,11 @@ func (o *GetPokemonAsJSONParams) BindRequest(r *http.Request, route *middleware.
 		res = append(res, err)
 	}
 
+	qOffset, qhkOffset, _ := qs.GetOK("offset")
+	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -78,6 +92,14 @@ func (o *GetPokemonAsJSONParams) Validate(formats strfmt.Registry) error {
 	// AllowEmptyValue: false
 
 	if err := o.validateLimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	// offset
+	// Required: false
+	// AllowEmptyValue: false
+
+	if err := o.validateOffset(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -123,6 +145,48 @@ func (o *GetPokemonAsJSONParams) validateLimit(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("limit", "query", *o.Limit, 20, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// bindOffset binds and validates parameter Offset from query.
+func (o *GetPokemonAsJSONParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		// Default values have been previously initialized by NewGetPokemonAsJSONParams()
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("offset", "query", "int64", raw)
+	}
+	o.Offset = &value
+
+	if err := o.validateOffset(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateOffset carries on validations for parameter Offset
+func (o *GetPokemonAsJSONParams) validateOffset(formats strfmt.Registry) error {
+
+	// Required: false
+	if o.Offset == nil {
+		return nil
+	}
+
+	if err := validate.MinimumInt("offset", "query", *o.Offset, 0, false); err != nil {
 		return err
 	}
 

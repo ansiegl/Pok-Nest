@@ -38,7 +38,7 @@ type PutEditPokemonInCollectionParams struct {
 	  In: body
 	*/
 	Caught *types.Collection
-	/*Pokémon's ID to edit
+	/*pokemon's ID to edit
 	  Required: true
 	  In: path
 	*/
