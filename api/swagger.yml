@@ -371,9 +371,25 @@ paths:
       - application/json
       tags:
       - pokemon
-      summary: retrieve all pokemon data as JSON
+      summary: retrieve all pokemon data as JSON or search by name
       operationId: getPokemonAsJson
       parameters:
+      - type: string
+        description: name of pokemon
+        name: name
+        in: query
+      - type: string
+        description: pokemon type to search for
+        name: type
+        in: query
+      - type: integer
+        description: pokemon generation to search for
+        name: generation
+        in: query
+      - type: boolean
+        description: whether to search for legendary pokemon
+        name: legendary
+        in: query
       - maximum: 20
         type: integer
         default: 10
@@ -388,7 +404,8 @@ paths:
         in: query
       responses:
         "200":
-          description: paginated pokemon data in JSON format
+          description: paginated pokemon data in JSON format or a single pokemon if
+            name is provided
           schema:
             type: object
             properties:
@@ -409,7 +426,9 @@ paths:
                     description: total number of pokemon available
                     type: integer
         "400":
-          description: invalid pagination parameters
+          description: invalid query parameters
+        "404":
+          description: pokemon not found
   /api/v1/pokemon/download:
     get:
       produces:

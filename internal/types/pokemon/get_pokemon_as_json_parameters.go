@@ -23,7 +23,8 @@ func NewGetPokemonAsJSONParams() GetPokemonAsJSONParams {
 	var (
 		// initialize parameters with default values
 
-		limitDefault  = int64(10)
+		limitDefault = int64(10)
+
 		offsetDefault = int64(0)
 	)
 
@@ -43,18 +44,34 @@ type GetPokemonAsJSONParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*pokemon generation to search for
+	  In: query
+	*/
+	Generation *int64 `query:"generation"`
+	/*whether to search for legendary pokemon
+	  In: query
+	*/
+	Legendary *bool `query:"legendary"`
 	/*number of pokemon to return per page
 	  Maximum: 20
 	  In: query
 	  Default: 10
 	*/
 	Limit *int64 `query:"limit"`
+	/*name of pokemon
+	  In: query
+	*/
+	Name *string `query:"name"`
 	/*number of pokemon to skip before returning results
 	  Minimum: 0
 	  In: query
 	  Default: 0
 	*/
 	Offset *int64 `query:"offset"`
+	/*pokemon type to search for
+	  In: query
+	*/
+	Type *string `query:"type"`
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -68,13 +85,33 @@ func (o *GetPokemonAsJSONParams) BindRequest(r *http.Request, route *middleware.
 
 	qs := runtime.Values(r.URL.Query())
 
+	qGeneration, qhkGeneration, _ := qs.GetOK("generation")
+	if err := o.bindGeneration(qGeneration, qhkGeneration, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qLegendary, qhkLegendary, _ := qs.GetOK("legendary")
+	if err := o.bindLegendary(qLegendary, qhkLegendary, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qLimit, qhkLimit, _ := qs.GetOK("limit")
 	if err := o.bindLimit(qLimit, qhkLimit, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
+	qName, qhkName, _ := qs.GetOK("name")
+	if err := o.bindName(qName, qhkName, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qOffset, qhkOffset, _ := qs.GetOK("offset")
 	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qType, qhkType, _ := qs.GetOK("type")
+	if err := o.bindType(qType, qhkType, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -87,6 +124,14 @@ func (o *GetPokemonAsJSONParams) BindRequest(r *http.Request, route *middleware.
 func (o *GetPokemonAsJSONParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	// generation
+	// Required: false
+	// AllowEmptyValue: false
+
+	// legendary
+	// Required: false
+	// AllowEmptyValue: false
+
 	// limit
 	// Required: false
 	// AllowEmptyValue: false
@@ -94,6 +139,10 @@ func (o *GetPokemonAsJSONParams) Validate(formats strfmt.Registry) error {
 	if err := o.validateLimit(formats); err != nil {
 		res = append(res, err)
 	}
+
+	// name
+	// Required: false
+	// AllowEmptyValue: false
 
 	// offset
 	// Required: false
@@ -103,9 +152,57 @@ func (o *GetPokemonAsJSONParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	// type
+	// Required: false
+	// AllowEmptyValue: false
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindGeneration binds and validates parameter Generation from query.
+func (o *GetPokemonAsJSONParams) bindGeneration(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("generation", "query", "int64", raw)
+	}
+	o.Generation = &value
+
+	return nil
+}
+
+// bindLegendary binds and validates parameter Legendary from query.
+func (o *GetPokemonAsJSONParams) bindLegendary(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertBool(raw)
+	if err != nil {
+		return errors.InvalidType("legendary", "query", "bool", raw)
+	}
+	o.Legendary = &value
+
 	return nil
 }
 
@@ -151,6 +248,24 @@ func (o *GetPokemonAsJSONParams) validateLimit(formats strfmt.Registry) error {
 	return nil
 }
 
+// bindName binds and validates parameter Name from query.
+func (o *GetPokemonAsJSONParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Name = &raw
+
+	return nil
+}
+
 // bindOffset binds and validates parameter Offset from query.
 func (o *GetPokemonAsJSONParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
@@ -189,6 +304,24 @@ func (o *GetPokemonAsJSONParams) validateOffset(formats strfmt.Registry) error {
 	if err := validate.MinimumInt("offset", "query", *o.Offset, 0, false); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// bindType binds and validates parameter Type from query.
+func (o *GetPokemonAsJSONParams) bindType(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Type = &raw
 
 	return nil
 }

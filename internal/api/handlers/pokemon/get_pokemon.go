@@ -19,6 +19,9 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
 
+		// get name from request
+		name := c.QueryParam("name")
+
 		// get limit from request
 		limitStr := c.QueryParam("limit")
 		limit := 10 // default value
@@ -39,7 +42,6 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			}
 
 			if parsedLimit > 20 {
-				// set maximum
 				limit = 20
 			} else {
 				limit = parsedLimit
@@ -66,23 +68,73 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			offset = parsedOffset
 		}
 
+		// get filter parameters from request
+		pokemonType := c.QueryParam("type")
+		generationStr := c.QueryParam("generation")
+		legendaryStr := c.QueryParam("legendary")
+
+		var generation int
+		if generationStr != "" {
+			var err error
+			generation, err = strconv.Atoi(generationStr)
+			if err != nil {
+				log.Err(err).Str("generation", generationStr).Msg("Invalid generation parameter")
+				return c.JSON(http.StatusBadRequest, map[string]string{
+					"error": "Invalid generation parameter",
+				})
+			}
+		}
+
+		legendary := false
+		if legendaryStr != "" {
+			legendary = legendaryStr == "true"
+		}
+
+		// get all pokemons
 		pokemons, err := models.Pokemons().All(ctx, s.DB)
 		if err != nil {
 			log.Err(err).Msg("Failed to load pokemon")
 			return err
 		}
 
-		if offset >= len(pokemons) {
+		// filter pokemon based on query parameters
+		var filteredPokemons []models.Pokemon
+		for _, p := range pokemons {
+			// filter by name
+			if name != "" && p.Name != name {
+				continue
+			}
+
+			// filter by type (either type 1 or type 2)
+			if pokemonType != "" && (p.Type1 != pokemonType && p.Type2.String != pokemonType) {
+				continue
+			}
+
+			// filter by generation
+			if generation > 0 && p.Generation != generation {
+				continue
+			}
+
+			// filter by legendary
+			if legendary && !p.Legendary {
+				continue
+			}
+
+			// add pokemon to filtered list
+			filteredPokemons = append(filteredPokemons, *p)
+		}
+
+		// pagination logic
+		if offset >= len(filteredPokemons) {
 			return c.JSON(http.StatusOK, []struct{}{})
 		}
 
-		// check number of pokemon to return
 		endIndex := offset + limit
-		if endIndex > len(pokemons) {
-			endIndex = len(pokemons)
+		if endIndex > len(filteredPokemons) {
+			endIndex = len(filteredPokemons)
 		}
 
-		// specific order in response
+		// response structure
 		type PokemonResponse struct {
 			PokemonID  string `json:"pokemon_id"`
 			Name       string `json:"name"`
@@ -92,21 +144,19 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			Legendary  bool   `json:"legendary"`
 		}
 
-		// pagination metadata
 		type PaginationMetadata struct {
 			Total  int `json:"total"`
 			Limit  int `json:"limit"`
 			Offset int `json:"offset"`
 		}
 
-		// response with pagination metadata
 		type APIResponse struct {
 			Data       []PokemonResponse  `json:"data"`
 			Pagination PaginationMetadata `json:"pagination"`
 		}
 
 		var responseData []PokemonResponse
-		for _, p := range pokemons[offset:endIndex] {
+		for _, p := range filteredPokemons[offset:endIndex] {
 			responseData = append(responseData, PokemonResponse{
 				PokemonID:  p.PokemonID,
 				Name:       p.Name,
@@ -117,10 +167,11 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			})
 		}
 
+		// return response with pagination metadata
 		response := APIResponse{
 			Data: responseData,
 			Pagination: PaginationMetadata{
-				Total:  len(pokemons),
+				Total:  len(filteredPokemons),
 				Limit:  limit,
 				Offset: offset,
 			},
