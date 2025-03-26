@@ -66,6 +66,13 @@ paths:
           description: number of pokemon to return per page
           default: 10
           maximum: 20
+        - name: offset
+          in: query
+          required: false
+          type: integer
+          description: number of pokemon to skip before returning results
+          default: 0
+          minimum: 0
       responses:
         "200":
           description: search results for pokemon

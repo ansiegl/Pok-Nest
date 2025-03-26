@@ -4,6 +4,7 @@ package handlers
 import (
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/auth"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/collection"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/common"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/pokemon"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/handlers/push"
@@ -21,6 +22,7 @@ func AttachAllRoutes(s *api.Server) {
 		auth.PostLogoutRoute(s),
 		auth.PostRefreshRoute(s),
 		auth.PostRegisterRoute(s),
+		collection.PostAddPokemonToCollectionRoute(s),
 		common.GetHealthyRoute(s),
 		common.GetReadyRoute(s),
 		common.GetSwaggerRoute(s),

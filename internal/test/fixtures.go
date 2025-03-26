@@ -24,6 +24,7 @@ type Insertable interface {
 // The main definition which fixtures are available through Fixtures().
 // Mind the declaration order! The fields get inserted exactly in the order they are declared.
 type FixtureMap struct {
+	Pokemon                       *models.Pokemon
 	User1                         *models.User
 	User1AppUserProfile           *models.AppUserProfile
 	User1AccessToken1             *models.AccessToken
@@ -45,6 +46,15 @@ type FixtureMap struct {
 func Fixtures() FixtureMap {
 	now := time.Now()
 	f := FixtureMap{}
+
+	f.Pokemon = &models.Pokemon{
+		PokemonID:  "ee51afeb-b86c-444d-a0db-746e7a53139c",
+		Name:       "Bulbasaur",
+		Type1:      "Grass",
+		Type2:      null.StringFrom("Poison"),
+		Generation: 1,
+		Legendary:  false,
+	}
 
 	f.User1 = &models.User{
 		ID:       "f6ede5d8-e22a-4ca5-aa12-67821865a3e5",

@@ -24,10 +24,14 @@ func NewSearchPokemonParams() SearchPokemonParams {
 		// initialize parameters with default values
 
 		limitDefault = int64(10)
+
+		offsetDefault = int64(0)
 	)
 
 	return SearchPokemonParams{
 		Limit: &limitDefault,
+
+		Offset: &offsetDefault,
 	}
 }
 
@@ -58,6 +62,12 @@ type SearchPokemonParams struct {
 	  In: query
 	*/
 	Name *string `query:"name"`
+	/*number of pokemon to skip before returning results
+	  Minimum: 0
+	  In: query
+	  Default: 0
+	*/
+	Offset *int64 `query:"offset"`
 	/*pokemon type to search for
 	  In: query
 	*/
@@ -95,6 +105,11 @@ func (o *SearchPokemonParams) BindRequest(r *http.Request, route *middleware.Mat
 		res = append(res, err)
 	}
 
+	qOffset, qhkOffset, _ := qs.GetOK("offset")
+	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qType, qhkType, _ := qs.GetOK("type")
 	if err := o.bindType(qType, qhkType, route.Formats); err != nil {
 		res = append(res, err)
@@ -128,6 +143,14 @@ func (o *SearchPokemonParams) Validate(formats strfmt.Registry) error {
 	// name
 	// Required: false
 	// AllowEmptyValue: false
+
+	// offset
+	// Required: false
+	// AllowEmptyValue: false
+
+	if err := o.validateOffset(formats); err != nil {
+		res = append(res, err)
+	}
 
 	// type
 	// Required: false
@@ -239,6 +262,48 @@ func (o *SearchPokemonParams) bindName(rawData []string, hasKey bool, formats st
 	}
 
 	o.Name = &raw
+
+	return nil
+}
+
+// bindOffset binds and validates parameter Offset from query.
+func (o *SearchPokemonParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		// Default values have been previously initialized by NewSearchPokemonParams()
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("offset", "query", "int64", raw)
+	}
+	o.Offset = &value
+
+	if err := o.validateOffset(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateOffset carries on validations for parameter Offset
+func (o *SearchPokemonParams) validateOffset(formats strfmt.Registry) error {
+
+	// Required: false
+	if o.Offset == nil {
+		return nil
+	}
+
+	if err := validate.MinimumInt("offset", "query", *o.Offset, 0, false); err != nil {
+		return err
+	}
 
 	return nil
 }
