@@ -1,24 +1,28 @@
-package pokemon
+package collection
 
 import (
 	"net/http"
 	"strconv"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/auth"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
 	"github.com/ansiegl/Pok-Nest.git/internal/res"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/labstack/echo/v4"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 func GetPokemonRoute(s *api.Server) *echo.Route {
-	return s.Router.APIV1Pokemon.GET("", getPokemonHandler(s))
+	return s.Router.APIV1Collection.GET("/pokemon", getPokemonHandler(s))
 }
 
 func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
+
+		user := auth.UserFromContext(ctx)
 
 		// get name from request
 		name := c.QueryParam("name")
@@ -91,38 +95,43 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			legendary = legendaryStr == "true"
 		}
 
-		// get all pokemons
-		pokemons, err := models.Pokemons().All(ctx, s.DB)
+		collectionPokemons, err := models.CollectionPokemons(
+			models.CollectionPokemonWhere.UserID.EQ(user.ID),
+			qm.Load(models.CollectionPokemonRels.Pokemon),
+		).All(ctx, s.DB)
 		if err != nil {
-			log.Err(err).Msg("Failed to load pokemon")
+			log.Err(err).Msg("Fehler beim Laden der Pokémon")
 			return err
 		}
 
 		// filter pokemon based on query parameters
 		var filteredPokemons []models.Pokemon
-		for _, p := range pokemons {
-			// filter by name
-			if name != "" && p.Name != name {
-				continue
-			}
+		for _, collectionPokemon := range collectionPokemons {
+			if collectionPokemon.R != nil && collectionPokemon.R.Pokemon != nil {
+				p := collectionPokemon.R.Pokemon
+				// filter by name
+				if name != "" && p.Name != name {
+					continue
+				}
 
-			// filter by type (either type 1 or type 2)
-			if pokemonType != "" && (p.Type1 != pokemonType && p.Type2.String != pokemonType) {
-				continue
-			}
+				// filter by type (either type 1 or type 2)
+				if pokemonType != "" && (p.Type1 != pokemonType && p.Type2.String != pokemonType) {
+					continue
+				}
 
-			// filter by generation
-			if generation > 0 && p.Generation != generation {
-				continue
-			}
+				// filter by generation
+				if generation > 0 && p.Generation != generation {
+					continue
+				}
 
-			// filter by legendary
-			if legendary && !p.Legendary {
-				continue
-			}
+				// filter by legendary
+				if legendary && !p.Legendary {
+					continue
+				}
 
-			// add pokemon to filtered list
-			filteredPokemons = append(filteredPokemons, *p)
+				// add pokemon to filtered list
+				filteredPokemons = append(filteredPokemons, *p)
+			}
 		}
 
 		// pagination logic
@@ -136,15 +145,18 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 		}
 
 		var responseData []res.PokemonResponse
-		for _, p := range filteredPokemons[offset:endIndex] {
-			responseData = append(responseData, res.PokemonResponse{
-				PokemonID:  p.PokemonID,
-				Name:       p.Name,
-				Type1:      p.Type1,
-				Type2:      p.Type2.String,
-				Generation: p.Generation,
-				Legendary:  p.Legendary,
-			})
+		for _, collectionPokemon := range collectionPokemons[offset:endIndex] {
+			if collectionPokemon.R != nil && collectionPokemon.R.Pokemon != nil {
+				pokemon := collectionPokemon.R.Pokemon
+				responseData = append(responseData, res.PokemonResponse{
+					PokemonID:  pokemon.PokemonID,
+					Name:       pokemon.Name,
+					Type1:      pokemon.Type1,
+					Type2:      pokemon.Type2.String,
+					Generation: pokemon.Generation,
+					Legendary:  pokemon.Legendary,
+				})
+			}
 		}
 
 		// return response with pagination metadata

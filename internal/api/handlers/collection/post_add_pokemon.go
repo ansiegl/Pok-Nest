@@ -38,10 +38,18 @@ func postAddPokemonToCollectionHandler(s *api.Server) echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, map[string]string{"error": "Pokemon not found"})
 		}
 
+		var request models.CollectionPokemon
+		if err := c.Bind(&request); err != nil {
+			log.Debug().Err(err).Msg("Failed to bind request")
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
+		}
+
 		if err := db.WithTransaction(ctx, s.DB, func(tx boil.ContextExecutor) error {
 			collection := &models.CollectionPokemon{
 				UserID:    user.ID,
 				PokemonID: pokemonID,
+				Caught:    request.Caught,
+				Nickname:  request.Nickname,
 			}
 
 			if err := collection.Insert(ctx, tx, boil.Infer()); err != nil {
