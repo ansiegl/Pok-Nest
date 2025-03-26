@@ -563,20 +563,20 @@ definitions:
           name:
             description: name of pokemon
             type: string
-            example: pikachu
+            example: Bulbasaur
           pokemon_id:
             description: ID of pokemon
             type: string
             format: uuid4
-            example: 891d37d3-c74f-493e-aea8-af73efd92016
+            example: ee51afeb-b86c-444d-a0db-746e7a53139c
           type_1:
             description: first type of pokemon
             type: string
-            example: electric
+            example: Grass
           type_2:
             description: second type of pokemon
             type: string
-            example: flying
+            example: Poison
   getUserInfoResponse:
     type: object
     required:
@@ -835,20 +835,20 @@ definitions:
       name:
         description: name of pokemon
         type: string
-        example: pikachu
+        example: Bulbasaur
       pokemon_id:
         description: ID of pokemon
         type: string
         format: uuid4
-        example: 891d37d3-c74f-493e-aea8-af73efd92016
+        example: ee51afeb-b86c-444d-a0db-746e7a53139c
       type_1:
         description: first type of pokemon
         type: string
-        example: electric
+        example: Grass
       type_2:
         description: second type of pokemon
         type: string
-        example: flying
+        example: Poison
   postChangePasswordPayload:
     type: object
     required:

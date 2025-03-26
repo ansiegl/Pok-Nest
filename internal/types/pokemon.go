@@ -30,23 +30,23 @@ type Pokemon struct {
 	Legendary *bool `json:"legendary"`
 
 	// name of pokemon
-	// Example: pikachu
+	// Example: Bulbasaur
 	// Required: true
 	Name *string `json:"name"`
 
 	// ID of pokemon
-	// Example: 891d37d3-c74f-493e-aea8-af73efd92016
+	// Example: ee51afeb-b86c-444d-a0db-746e7a53139c
 	// Required: true
 	// Format: uuid4
 	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
 
 	// first type of pokemon
-	// Example: electric
+	// Example: Grass
 	// Required: true
 	Type1 *string `json:"type_1"`
 
 	// second type of pokemon
-	// Example: flying
+	// Example: Poison
 	Type2 string `json:"type_2,omitempty"`
 }
 
