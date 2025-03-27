@@ -68,6 +68,10 @@ type SearchPokemonParams struct {
 	  Default: 0
 	*/
 	Offset *int64 `query:"offset"`
+	/*order for the results ("asc" ascending, "desc" descending)
+	  In: query
+	*/
+	SortOrder *string `query:"sortOrder"`
 	/*pokemon type to search for
 	  In: query
 	*/
@@ -110,6 +114,11 @@ func (o *SearchPokemonParams) BindRequest(r *http.Request, route *middleware.Mat
 		res = append(res, err)
 	}
 
+	qSortOrder, qhkSortOrder, _ := qs.GetOK("sortOrder")
+	if err := o.bindSortOrder(qSortOrder, qhkSortOrder, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qType, qhkType, _ := qs.GetOK("type")
 	if err := o.bindType(qType, qhkType, route.Formats); err != nil {
 		res = append(res, err)
@@ -149,6 +158,14 @@ func (o *SearchPokemonParams) Validate(formats strfmt.Registry) error {
 	// AllowEmptyValue: false
 
 	if err := o.validateOffset(formats); err != nil {
+		res = append(res, err)
+	}
+
+	// sortOrder
+	// Required: false
+	// AllowEmptyValue: false
+
+	if err := o.validateSortOrder(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -302,6 +319,43 @@ func (o *SearchPokemonParams) validateOffset(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("offset", "query", *o.Offset, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// bindSortOrder binds and validates parameter SortOrder from query.
+func (o *SearchPokemonParams) bindSortOrder(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.SortOrder = &raw
+
+	if err := o.validateSortOrder(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateSortOrder carries on validations for parameter SortOrder
+func (o *SearchPokemonParams) validateSortOrder(formats strfmt.Registry) error {
+
+	// Required: false
+	if o.SortOrder == nil {
+		return nil
+	}
+
+	if err := validate.EnumCase("sortOrder", "query", *o.SortOrder, []interface{}{"asc", "desc"}, true); err != nil {
 		return err
 	}
 

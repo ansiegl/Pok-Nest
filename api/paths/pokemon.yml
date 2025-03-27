@@ -46,6 +46,12 @@ paths:
           description: number of pokemon to skip before returning results
           default: 0
           minimum: 0
+        - name: sortOrder
+          in: query
+          required: false
+          type: string
+          enum: [asc, desc]
+          description: order for the results ("asc" ascending, "desc" descending)
       responses:
         "200":
           description: paginated pokemon data in JSON format or a single pokemon if name is provided

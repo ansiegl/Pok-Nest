@@ -2,6 +2,7 @@ package collection
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
@@ -95,6 +96,13 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			legendary = legendaryStr == "true"
 		}
 
+		// get sortOrder from request (asc or desc)
+		sortOrder := c.QueryParam("sortOrder")
+		if sortOrder != "asc" && sortOrder != "desc" && sortOrder != "" {
+			log.Debug().Str("sortOrder", sortOrder).Msg("Invalid sortOrder parameter")
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid sortOrder parameter. Allowed values are 'asc' or 'desc'."})
+		}
+
 		collectionPokemons, err := models.CollectionPokemons(
 			models.CollectionPokemonWhere.UserID.EQ(user.ID),
 			qm.Load(models.CollectionPokemonRels.Pokemon),
@@ -132,6 +140,19 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 				// add pokemon to filtered list
 				filteredPokemons = append(filteredPokemons, *p)
 			}
+		}
+
+		// Sort the filteredPokemons based on sortOrder
+		if sortOrder == "asc" {
+			// Ascending sort by Name (you can change to another field like Generation if needed)
+			sort.Slice(filteredPokemons, func(i, j int) bool {
+				return filteredPokemons[i].Name < filteredPokemons[j].Name
+			})
+		} else if sortOrder == "desc" {
+			// Descending sort by Name (you can change to another field like Generation if needed)
+			sort.Slice(filteredPokemons, func(i, j int) bool {
+				return filteredPokemons[i].Name > filteredPokemons[j].Name
+			})
 		}
 
 		// pagination logic

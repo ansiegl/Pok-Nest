@@ -26,8 +26,12 @@ type Insertable interface {
 type FixtureMap struct {
 	User1                         *models.User
 	PokemonNotInCollection        *models.Pokemon
-	PokemonInCollection           *models.Pokemon
-	User1CollectionPokemon        *models.CollectionPokemon
+	PokemonInCollection1          *models.Pokemon
+	PokemonInCollection2          *models.Pokemon
+	PokemonInCollection3          *models.Pokemon
+	User1CollectionPokemon1       *models.CollectionPokemon
+	User1CollectionPokemon2       *models.CollectionPokemon
+	User1CollectionPokemon3       *models.CollectionPokemon
 	User1AppUserProfile           *models.AppUserProfile
 	User1AccessToken1             *models.AccessToken
 	User1RefreshToken1            *models.RefreshToken
@@ -58,10 +62,26 @@ func Fixtures() FixtureMap {
 		Legendary:  false,
 	}
 
-	f.PokemonInCollection = &models.Pokemon{
+	f.PokemonInCollection1 = &models.Pokemon{
 		PokemonID:  "ee51afeb-b86c-444d-a0db-746e7a53139c",
 		Name:       "Bulbasaur",
 		Type1:      "Grass",
+		Type2:      null.StringFrom("Poison"),
+		Generation: 1,
+		Legendary:  false,
+	}
+	f.PokemonInCollection2 = &models.Pokemon{
+		PokemonID:  "2b37dceb-a2d3-42f7-a2fd-acd0d21bcb66",
+		Name:       "Pidgey",
+		Type1:      "Normal",
+		Type2:      null.StringFrom("Flying"),
+		Generation: 1,
+		Legendary:  false,
+	}
+	f.PokemonInCollection3 = &models.Pokemon{
+		PokemonID:  "bb474ab9-153d-4ee9-be9e-b65dde7d2738",
+		Name:       "Kakuna",
+		Type1:      "Bug",
 		Type2:      null.StringFrom("Poison"),
 		Generation: 1,
 		Legendary:  false,
@@ -80,9 +100,25 @@ func Fixtures() FixtureMap {
 		LegalAcceptedAt: null.TimeFrom(now.Add(time.Minute * -10)),
 	}
 
-	f.User1CollectionPokemon = &models.CollectionPokemon{
-		PokemonID: f.PokemonInCollection.PokemonID,
+	f.User1CollectionPokemon1 = &models.CollectionPokemon{
+		PokemonID: f.PokemonInCollection1.PokemonID,
 		UserID:    f.User1.ID,
+		Caught:    null.TimeFrom(now.Add(-24 * time.Hour)),
+		Nickname:  null.StringFrom("Buddy"),
+	}
+
+	f.User1CollectionPokemon2 = &models.CollectionPokemon{
+		PokemonID: f.PokemonInCollection2.PokemonID,
+		UserID:    f.User1.ID,
+		Caught:    null.TimeFrom(now.Add(-48 * time.Hour)),
+		Nickname:  null.StringFrom("Sky"),
+	}
+
+	f.User1CollectionPokemon3 = &models.CollectionPokemon{
+		PokemonID: f.PokemonInCollection3.PokemonID,
+		UserID:    f.User1.ID,
+		Caught:    null.TimeFrom(now.Add(-72 * time.Hour)),
+		Nickname:  null.StringFrom("Poison"),
 	}
 
 	f.User1AccessToken1 = &models.AccessToken{
