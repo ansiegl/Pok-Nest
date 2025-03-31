@@ -11,3 +11,16 @@ definitions:
     properties:
       pokemon:
         $ref: './pokemon.yml#/definitions/Pokemon'
+  GetPokemonInCollectionResponse:
+    type: object
+    required:
+      - data
+      - pagination
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "./pokemon.yml#/definitions/Pokemon"
+        description: list of pokemon objects
+      pagination:
+          $ref: "./pokemon.yml#/definitions/Pagination"

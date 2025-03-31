@@ -4,80 +4,63 @@ info:
    version: 0.1.0
 paths:
   /api/v1/pokemon:
-    get:
-      tags:
-        - pokemon
-      summary: retrieve all pokemon data as JSON or search by name
-      operationId: getPokemonAsJson
-      produces:
-        - application/json
-      parameters:
-        - name: name
-          in: query
-          required: false
-          type: string
-          description: name of pokemon
-        - name: type
-          in: query
-          required: false
-          type: string
-          description: pokemon type to search for
-        - name: generation
-          in: query
-          required: false
-          type: integer
-          description: pokemon generation to search for
-        - name: legendary
-          in: query
-          required: false
-          type: boolean
-          description: whether to search for legendary pokemon
-        - name: limit
-          in: query
-          required: false
-          type: integer
-          description: number of pokemon to return per page
-          default: 10
-          maximum: 20
-        - name: offset
-          in: query
-          required: false
-          type: integer
-          description: number of pokemon to skip before returning results
-          default: 0
-          minimum: 0
-        - name: sortOrder
-          in: query
-          required: false
-          type: string
-          enum: [asc, desc]
-          description: order for the results ("asc" ascending, "desc" descending)
-      responses:
-        "200":
-          description: paginated pokemon data in JSON format or a single pokemon if name is provided
-          schema:
-            type: object
-            properties: 
-              data:
-                type: array
-                items:
-                  $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
-              pagination:
-                type: object
-                properties: 
-                  total:
-                    type: integer
-                    description: total number of pokemon available
-                  limit:
-                    type: integer
-                    description: number of pokemon returned per page
-                  offset:
-                    type: integer
-                    description: number of pokemon skipped
-        "400":
-          description: invalid query parameters
-        "404":
-          description: pokemon not found
+      get:
+        tags:
+          - pokemon
+        summary: retrieve all pokemon data as JSON or search by name
+        operationId: getPokemonAsJson
+        produces:
+          - application/json
+        parameters:
+          - name: name
+            in: query
+            required: false
+            type: string
+            description: name of pokemon
+          - name: type
+            in: query
+            required: false
+            type: string
+            description: pokemon type to search for
+          - name: generation
+            in: query
+            required: false
+            type: integer
+            description: pokemon generation to search for
+          - name: legendary
+            in: query
+            required: false
+            type: boolean
+            description: whether to search for legendary pokemon
+          - name: limit
+            in: query
+            required: false
+            type: integer
+            description: number of pokemon to return per page
+            default: 10
+            maximum: 20
+          - name: offset
+            in: query
+            required: false
+            type: integer
+            description: number of pokemon to skip before returning results
+            default: 0
+            minimum: 0
+          - name: sortOrder
+            in: query
+            required: false
+            type: string
+            enum: [asc, desc]
+            description: order for the results ("asc" ascending, "desc" descending)
+        responses:
+          "200":
+            description: GetPokemonResponse
+            schema:
+              $ref: "../definitions/pokemon.yml#/definitions/GetPokemonResponse"
+          "400":
+            description: invalid query parameters
+          "404":
+            description: pokemon not found
   /api/v1/pokemon/download:
     get:
       tags:
@@ -88,13 +71,12 @@ paths:
         - text/csv
       responses:
         "200":
-          description: pokemon data in CSV format
+          description: Successful download of pokemon data
+          schema:
+            $ref: "../definitions/pokemon.yml#/definitions/GetDownloadResponse"
           headers:
             Content-Disposition:
               type: string
               description: 'attachment; filename=pokemon.csv'
-          schema:
-            type: string
-            format: binary
         "500":
           description: internal server error

@@ -23,7 +23,7 @@ func AttachAllRoutes(s *api.Server) {
 		auth.PostRefreshRoute(s),
 		auth.PostRegisterRoute(s),
 		collection.DeletePokemonRoute(s),
-		collection.GetPokemonRoute(s),
+		collection.GetPokemonInCollectionRoute(s),
 		collection.PostAddPokemonToCollectionRoute(s),
 		collection.PutEditPokemonRoute(s),
 		common.GetHealthyRoute(s),

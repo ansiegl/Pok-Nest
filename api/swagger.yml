@@ -286,8 +286,9 @@ paths:
       - Bearer: []
       tags:
       - collection
-      summary: search pokemon by attribute (name, type, etc.)
-      operationId: searchPokemon
+      summary: get all pokemon in collection or search pokemon by attribute (name,
+        type, etc.)
+      operationId: getPokemonInCollection
       parameters:
       - type: string
         description: pokemon name to search for
@@ -326,11 +327,9 @@ paths:
         in: query
       responses:
         "200":
-          description: search results for pokemon
+          description: GetPokemonInCollectionResponse
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/pokemon'
+            $ref: '#/definitions/getPokemonInCollectionResponse'
         "400":
           description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
@@ -424,27 +423,9 @@ paths:
         in: query
       responses:
         "200":
-          description: paginated pokemon data in JSON format or a single pokemon if
-            name is provided
+          description: GetPokemonResponse
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/pokemon'
-              pagination:
-                type: object
-                properties:
-                  limit:
-                    description: number of pokemon returned per page
-                    type: integer
-                  offset:
-                    description: number of pokemon skipped
-                    type: integer
-                  total:
-                    description: total number of pokemon available
-                    type: integer
+            $ref: '#/definitions/getPokemonResponse'
         "400":
           description: invalid query parameters
         "404":
@@ -459,10 +440,9 @@ paths:
       operationId: downloadPokemonCSV
       responses:
         "200":
-          description: pokemon data in CSV format
+          description: Successful download of pokemon data
           schema:
-            type: string
-            format: binary
+            $ref: '#/definitions/getDownloadResponse'
           headers:
             Content-Disposition:
               type: string
@@ -558,39 +538,47 @@ definitions:
     - pokemon
     properties:
       pokemon:
-        type: object
-        required:
-        - pokemon_id
-        - name
-        - type_1
-        - generation
-        - legendary
-        properties:
-          generation:
-            description: generation of pokemon
-            type: integer
-            example: 1
-          legendary:
-            description: is the pokemon legendary?
-            type: boolean
-            example: false
-          name:
-            description: name of pokemon
-            type: string
-            example: Bulbasaur
-          pokemon_id:
-            description: ID of pokemon
-            type: string
-            format: uuid4
-            example: ee51afeb-b86c-444d-a0db-746e7a53139c
-          type_1:
-            description: first type of pokemon
-            type: string
-            example: Grass
-          type_2:
-            description: second type of pokemon
-            type: string
-            example: Poison
+        $ref: '#/definitions/pokemon'
+  getDownloadResponse:
+    type: object
+    required:
+    - message
+    - status
+    properties:
+      message:
+        description: Result message of the download operation
+        type: string
+        example: CSV download successful
+      status:
+        description: HTTP status code of the operation
+        type: integer
+        example: 200
+  getPokemonInCollectionResponse:
+    type: object
+    required:
+    - data
+    - pagination
+    properties:
+      data:
+        description: list of pokemon objects
+        type: array
+        items:
+          $ref: '#/definitions/pokemon'
+      pagination:
+        $ref: '#/definitions/pagination'
+  getPokemonResponse:
+    type: object
+    required:
+    - data
+    - pagination
+    properties:
+      data:
+        description: list of pokemon objects
+        type: array
+        items:
+          $ref: '#/definitions/pokemon'
+      pagination:
+        $ref: '#/definitions/pagination'
   getUserInfoResponse:
     type: object
     required:
@@ -829,17 +817,27 @@ definitions:
     enum:
     - asc
     - desc
+  pagination:
+    type: object
+    properties:
+      limit:
+        description: number of pokemon returned per page
+        type: integer
+      offset:
+        description: number of pokemon skipped before returning results
+        type: integer
+      total:
+        description: total number of pokemon matching the query
+        type: integer
   pokemon:
     type: object
     required:
     - pokemon_id
     - name
-    - type_1
-    - generation
-    - legendary
+    - type1
     properties:
       generation:
-        description: generation of pokemon
+        description: generation of the pokemon
         type: integer
         example: 1
       legendary:
@@ -847,22 +845,22 @@ definitions:
         type: boolean
         example: false
       name:
-        description: name of pokemon
+        description: name of the pokemon
         type: string
-        example: Bulbasaur
+        example: Pikachu
       pokemon_id:
-        description: ID of pokemon
+        description: ID of the pokemon
         type: string
         format: uuid4
-        example: ee51afeb-b86c-444d-a0db-746e7a53139c
-      type_1:
-        description: first type of pokemon
+        example: 891d37d3-c74f-493e-aea8-af73efd92016
+      type1:
+        description: first type of the pokemon
         type: string
-        example: Grass
-      type_2:
-        description: second type of pokemon
+        example: Electric
+      type2:
+        description: second type of the pokemon
         type: string
-        example: Poison
+        example: Flying
   postChangePasswordPayload:
     type: object
     required:

@@ -19,48 +19,38 @@ import (
 // swagger:model pokemon
 type Pokemon struct {
 
-	// generation of pokemon
+	// generation of the pokemon
 	// Example: 1
-	// Required: true
-	Generation *int64 `json:"generation"`
+	Generation int64 `json:"generation,omitempty"`
 
 	// is the pokemon legendary?
 	// Example: false
-	// Required: true
-	Legendary *bool `json:"legendary"`
+	Legendary bool `json:"legendary,omitempty"`
 
-	// name of pokemon
-	// Example: Bulbasaur
+	// name of the pokemon
+	// Example: Pikachu
 	// Required: true
 	Name *string `json:"name"`
 
-	// ID of pokemon
-	// Example: ee51afeb-b86c-444d-a0db-746e7a53139c
+	// ID of the pokemon
+	// Example: 891d37d3-c74f-493e-aea8-af73efd92016
 	// Required: true
 	// Format: uuid4
 	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
 
-	// first type of pokemon
-	// Example: Grass
+	// first type of the pokemon
+	// Example: Electric
 	// Required: true
-	Type1 *string `json:"type_1"`
+	Type1 *string `json:"type1"`
 
-	// second type of pokemon
-	// Example: Poison
-	Type2 string `json:"type_2,omitempty"`
+	// second type of the pokemon
+	// Example: Flying
+	Type2 string `json:"type2,omitempty"`
 }
 
 // Validate validates this pokemon
 func (m *Pokemon) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateGeneration(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLegendary(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
@@ -77,24 +67,6 @@ func (m *Pokemon) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Pokemon) validateGeneration(formats strfmt.Registry) error {
-
-	if err := validate.Required("generation", "body", m.Generation); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Pokemon) validateLegendary(formats strfmt.Registry) error {
-
-	if err := validate.Required("legendary", "body", m.Legendary); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -122,7 +94,7 @@ func (m *Pokemon) validatePokemonID(formats strfmt.Registry) error {
 
 func (m *Pokemon) validateType1(formats strfmt.Registry) error {
 
-	if err := validate.Required("type_1", "body", m.Type1); err != nil {
+	if err := validate.Required("type1", "body", m.Type1); err != nil {
 		return err
 	}
 

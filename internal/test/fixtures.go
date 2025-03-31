@@ -54,18 +54,18 @@ func Fixtures() FixtureMap {
 	f := FixtureMap{}
 
 	f.PokemonNotInCollection = &models.Pokemon{
-		PokemonID:  "448f932d-3424-4fbd-b5c1-51fa04651f2d",
-		Name:       "Ivysaur",
-		Type1:      "Grass",
+		PokemonID:  "45e0c46b-67a6-4b71-b37e-172856ffabdc",
+		Name:       "Weedle",
+		Type1:      "Bug",
 		Type2:      null.StringFrom("Poison"),
 		Generation: 1,
 		Legendary:  false,
 	}
 
 	f.PokemonInCollection1 = &models.Pokemon{
-		PokemonID:  "ee51afeb-b86c-444d-a0db-746e7a53139c",
-		Name:       "Bulbasaur",
-		Type1:      "Grass",
+		PokemonID:  "bb474ab9-153d-4ee9-be9e-b65dde7d2738",
+		Name:       "Kakuna",
+		Type1:      "Bug",
 		Type2:      null.StringFrom("Poison"),
 		Generation: 1,
 		Legendary:  false,
@@ -79,10 +79,10 @@ func Fixtures() FixtureMap {
 		Legendary:  false,
 	}
 	f.PokemonInCollection3 = &models.Pokemon{
-		PokemonID:  "bb474ab9-153d-4ee9-be9e-b65dde7d2738",
-		Name:       "Kakuna",
-		Type1:      "Bug",
-		Type2:      null.StringFrom("Poison"),
+		PokemonID:  "95978710-ab16-41f4-8015-947c6a10888d",
+		Name:       "Golem",
+		Type1:      "Rock",
+		Type2:      null.StringFrom("Ground"),
 		Generation: 1,
 		Legendary:  false,
 	}

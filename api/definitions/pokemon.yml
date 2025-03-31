@@ -9,32 +9,69 @@ definitions:
     required:
       - pokemon_id
       - name
-      - type_1
-      - generation
-      - legendary
+      - type1
     properties:
       pokemon_id:
         type: string
         format: uuid4
-        description: ID of pokemon
-        example: ee51afeb-b86c-444d-a0db-746e7a53139c
+        description: ID of the pokemon
+        example: 891d37d3-c74f-493e-aea8-af73efd92016
       name:
         type: string
-        description: name of pokemon
-        example: Bulbasaur
-      type_1:
+        description: name of the pokemon
+        example: Pikachu
+      type1:
         type: string
-        description: first type of pokemon
-        example: Grass
-      type_2:
+        description: first type of the pokemon
+        example: Electric
+      type2:
         type: string
-        description: second type of pokemon
-        example: Poison
+        description: second type of the pokemon
+        example: Flying
       generation:
         type: integer
-        description: generation of pokemon
+        description: generation of the pokemon
         example: 1
       legendary:
         type: boolean
-        description: is the pokemon legendary?
+        description:  is the pokemon legendary?
         example: false
+  Pagination:
+    type: object
+    properties:
+      total:
+        type: integer
+        description: total number of pokemon matching the query
+      limit:
+        type: integer
+        description: number of pokemon returned per page
+      offset:
+        type: integer
+        description: number of pokemon skipped before returning results
+  GetPokemonResponse:
+    type: object
+    required:
+      - data
+      - pagination
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/Pokemon"
+        description: list of pokemon objects
+      pagination:
+        $ref: "#/definitions/Pagination"
+  GetDownloadResponse:
+      type: object
+      required:
+        - message
+        - status
+      properties:
+        message:
+          type: string
+          description: Result message of the download operation
+          example: "CSV download successful"
+        status:
+          type: integer
+          description: HTTP status code of the operation
+          example: 200

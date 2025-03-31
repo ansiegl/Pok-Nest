@@ -2,14 +2,18 @@ package pokemon
 
 import (
 	"net/http"
-	"sort"
-	"strconv"
+	"strings"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
-	"github.com/ansiegl/Pok-Nest.git/internal/res"
+	"github.com/ansiegl/Pok-Nest.git/internal/types"
+	"github.com/ansiegl/Pok-Nest.git/internal/types/pokemon"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
+	"github.com/go-openapi/strfmt"
 	"github.com/labstack/echo/v4"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func GetPokemonRoute(s *api.Server) *echo.Route {
@@ -21,163 +25,85 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
 
-		// get name from request
-		name := c.QueryParam("name")
-
-		// get limit from request
-		limitStr := c.QueryParam("limit")
-		limit := 10 // default value
-
-		if limitStr != "" {
-			parsedLimit, err := strconv.Atoi(limitStr)
-			if err != nil {
-				log.Err(err).Str("limit", limitStr).Msg("Invalid limit parameter")
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "Invalid limit parameter",
-				})
-			}
-
-			if parsedLimit <= 0 {
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "Limit must be greater than 0",
-				})
-			}
-
-			if parsedLimit > 20 {
-				limit = 20
-			} else {
-				limit = parsedLimit
-			}
+		params := pokemon.NewGetPokemonAsJSONParams()
+		err := util.BindAndValidatePathAndQueryParams(c, &params)
+		if err != nil {
+			return err
 		}
 
-		// get offset from request
-		offsetStr := c.QueryParam("offset")
-		offset := 0 // default value
+		queryMods := []qm.QueryMod{}
 
-		if offsetStr != "" {
-			parsedOffset, err := strconv.Atoi(offsetStr)
-			if err != nil {
-				log.Err(err).Str("offset", offsetStr).Msg("Invalid offset parameter")
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "Invalid offset parameter",
-				})
-			}
-
-			if parsedOffset < 0 {
-				return c.JSON(http.StatusBadRequest, map[string]string{"error": "Offset must be greater than or equal to 0"})
-			}
-
-			offset = parsedOffset
+		if params.Name != nil {
+			nameFormatted := cases.Title(language.English).String(strings.ToLower(*params.Name))
+			queryMods = append(queryMods, qm.Where("name = ?", nameFormatted))
+		}
+		if params.Type != nil {
+			typeFormatted := cases.Title(language.English).String(strings.ToLower(*params.Type))
+			queryMods = append(queryMods, qm.Where("type_1 = ? OR type_2 = ?", typeFormatted, typeFormatted))
+		}
+		if params.Generation != nil {
+			queryMods = append(queryMods, qm.Where("generation = ?", params.Generation))
+		}
+		if params.Legendary != nil {
+			queryMods = append(queryMods, qm.Where("legendary = ?", params.Legendary))
 		}
 
-		// get filter parameters from request
-		pokemonType := c.QueryParam("type")
-		generationStr := c.QueryParam("generation")
-		legendaryStr := c.QueryParam("legendary")
+		sortOrder := "asc"
+		if params.SortOrder != nil {
+			sortOrder = *params.SortOrder
+		}
+		queryMods = append(queryMods, qm.OrderBy("name "+sortOrder))
 
-		var generation int
-		if generationStr != "" {
-			var err error
-			generation, err = strconv.Atoi(generationStr)
-			if err != nil {
-				log.Err(err).Str("generation", generationStr).Msg("Invalid generation parameter")
-				return c.JSON(http.StatusBadRequest, map[string]string{
-					"error": "Invalid generation parameter",
-				})
-			}
+		limit := 10
+		if params.Limit != nil {
+			limit = int(*params.Limit)
+		}
+		offset := 0
+		if params.Offset != nil {
+			offset = int(*params.Offset)
 		}
 
-		legendary := false
-		if legendaryStr != "" {
-			legendary = legendaryStr == "true"
+		queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
+
+		totalCount, err := models.Pokemons().Count(ctx, s.DB)
+		if err != nil {
+			log.Err(err).Msg("Failed to get total count of Pokémon")
+			return err
 		}
 
-		// get sortOrder from request (asc or desc)
-		sortOrder := c.QueryParam("sortOrder")
-		if sortOrder != "asc" && sortOrder != "desc" && sortOrder != "" {
-			log.Debug().Str("sortOrder", sortOrder).Msg("Invalid sortOrder parameter")
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid sortOrder parameter. Allowed values are 'asc' or 'desc'."})
-		}
-
-		// get all pokemons
-		pokemons, err := models.Pokemons().All(ctx, s.DB)
+		pokemons, err := models.Pokemons(queryMods...).All(ctx, s.DB)
 		if err != nil {
 			log.Err(err).Msg("Failed to load pokemon")
 			return err
 		}
 
-		// filter pokemon based on query parameters
-		var filteredPokemons []models.Pokemon
+		var pokemonData []*types.Pokemon
 		for _, p := range pokemons {
-			// filter by name
-			if name != "" && p.Name != name {
-				continue
-			}
+			gen := int64(p.Generation)
+			pokemonID := strfmt.UUID4(p.PokemonID)
 
-			// filter by type (either type 1 or type 2)
-			if pokemonType != "" && (p.Type1 != pokemonType && p.Type2.String != pokemonType) {
-				continue
-			}
-
-			// filter by generation
-			if generation > 0 && p.Generation != generation {
-				continue
-			}
-
-			// filter by legendary
-			if legendary && !p.Legendary {
-				continue
-			}
-
-			// add pokemon to filtered list
-			filteredPokemons = append(filteredPokemons, *p)
-		}
-
-		// Sort the filteredPokemons based on sortOrder
-		if sortOrder == "asc" {
-			// Ascending sort by Name (you can change to another field like Generation if needed)
-			sort.Slice(filteredPokemons, func(i, j int) bool {
-				return filteredPokemons[i].Name < filteredPokemons[j].Name
-			})
-		} else if sortOrder == "desc" {
-			// Descending sort by Name (you can change to another field like Generation if needed)
-			sort.Slice(filteredPokemons, func(i, j int) bool {
-				return filteredPokemons[i].Name > filteredPokemons[j].Name
-			})
-		}
-
-		// pagination logic
-		if offset >= len(filteredPokemons) {
-			return c.JSON(http.StatusOK, []struct{}{})
-		}
-
-		endIndex := offset + limit
-		if endIndex > len(filteredPokemons) {
-			endIndex = len(filteredPokemons)
-		}
-
-		var responseData []res.PokemonResponse
-		for _, p := range filteredPokemons[offset:endIndex] {
-			responseData = append(responseData, res.PokemonResponse{
-				PokemonID:  p.PokemonID,
-				Name:       p.Name,
-				Type1:      p.Type1,
+			pokemonData = append(pokemonData, &types.Pokemon{
+				PokemonID:  &pokemonID,
+				Name:       &p.Name,
+				Type1:      &p.Type1,
 				Type2:      p.Type2.String,
-				Generation: p.Generation,
+				Generation: gen,
 				Legendary:  p.Legendary,
 			})
 		}
 
-		// return response with pagination metadata
-		response := res.APIResponse{
-			Data: responseData,
-			Pagination: res.PaginationMetadata{
-				Total:  len(filteredPokemons),
-				Limit:  limit,
-				Offset: offset,
+		tempLimit := int64(limit)
+		tempOffset := int64(offset)
+
+		response := &types.GetPokemonResponse{
+			Data: pokemonData,
+			Pagination: &types.Pagination{
+				Total:  totalCount,
+				Limit:  tempLimit,
+				Offset: tempOffset,
 			},
 		}
 
-		return c.JSON(http.StatusOK, response)
+		return util.ValidateAndReturn(c, http.StatusOK, response)
 	}
 }

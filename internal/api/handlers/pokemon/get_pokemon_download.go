@@ -1,8 +1,8 @@
 package pokemon
 
 import (
+	"bytes"
 	"encoding/csv"
-	"net/http"
 	"strconv"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
@@ -26,32 +26,46 @@ func getPokemonDownloadHandler(s *api.Server) echo.HandlerFunc {
 			return err
 		}
 
-		csvData := [][]string{
-			{"PokemonID", "Name", "Type1", "Type2", "Generation", "Legendary"},
+		var csvBuffer bytes.Buffer
+		writer := csv.NewWriter(&csvBuffer)
+
+		header := []string{"PokemonID", "Name", "Type1", "Type2", "Generation", "Legendary"}
+		if err := writer.Write(header); err != nil {
+			log.Err(err).Msg("Failed to write CSV header")
+			return err
 		}
 
 		for _, p := range pokemons {
-			csvData = append(csvData, []string{
+			row := []string{
 				p.PokemonID,
 				p.Name,
 				p.Type1,
 				p.Type2.String,
 				strconv.Itoa(p.Generation),
 				boolToString(p.Legendary),
-			})
+			}
+			if err := writer.Write(row); err != nil {
+				log.Err(err).Msg("Failed to write CSV row")
+				return err
+			}
+		}
+
+		writer.Flush()
+		if err := writer.Error(); err != nil {
+			log.Err(err).Msg("Failed to flush CSV writer")
+			return err
 		}
 
 		c.Response().Header().Set("Content-Type", "text/csv")
 		c.Response().Header().Set("Content-Disposition", "attachment; filename=pokemon.csv")
 
-		w := csv.NewWriter(c.Response().Writer)
-		err = w.WriteAll(csvData)
+		_, err = c.Response().Write(csvBuffer.Bytes())
 		if err != nil {
-			log.Err(err).Msg("Failed to write CSV")
+			log.Err(err).Msg("Failed to write response")
 			return err
 		}
 
-		return c.JSON(http.StatusOK, map[string]string{"message": "CSV download successful"})
+		return nil
 	}
 }
 

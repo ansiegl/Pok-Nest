@@ -36,8 +36,8 @@ paths:
         - Bearer: []
       tags:
         - collection
-      summary: search pokemon by attribute (name, type, etc.)
-      operationId: searchPokemon
+      summary: get all pokemon in collection or search pokemon by attribute (name, type, etc.)
+      operationId: getPokemonInCollection
       parameters:
         - name: name
           in: query
@@ -80,14 +80,12 @@ paths:
           enum: [asc, desc]
           description: order for the results ("asc" ascending, "desc" descending)
       responses:
-        "200":
-          description: search results for pokemon
-          schema:
-            type: array
-            items:
-              $ref: "../definitions/pokemon.yml#/definitions/Pokemon"
-        "400":
-          description: invalid search parameters
+          "200":
+            description: GetPokemonInCollectionResponse
+            schema:
+              $ref: "../definitions/collection.yml#/definitions/GetPokemonInCollectionResponse"
+          "400":
+            description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
     delete:
       security:

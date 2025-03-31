@@ -6,7 +6,9 @@ import (
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/auth"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/types/collection"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/labstack/echo/v4"
 	"github.com/volatiletech/null/v8"
@@ -24,24 +26,24 @@ func putEditPokemonHandler(s *api.Server) echo.HandlerFunc {
 
 		user := auth.UserFromContext(ctx)
 
-		pokemonID := c.Param("pokemonId")
-		if pokemonID == "" {
-			log.Debug().Msg("Pokemon ID is missing from path")
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Pokemon ID is missing"})
+		params := collection.NewPutEditPokemonInCollectionParams()
+		err := util.BindAndValidatePathAndQueryParams(c, &params)
+		if err != nil {
+			return err
 		}
 
 		pokemon, err := models.CollectionPokemons(
-			models.CollectionPokemonWhere.PokemonID.EQ(pokemonID),
+			models.CollectionPokemonWhere.PokemonID.EQ(params.PokemonID),
 			models.CollectionPokemonWhere.UserID.EQ(user.ID),
 		).One(ctx, s.DB)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to retrieve pokemon from collection")
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+			return httperrors.NewHTTPError(http.StatusInternalServerError, "SERVER_ERROR", "Database error")
 		}
 
 		if pokemon == nil {
-			log.Debug().Str("pokemonID", pokemonID).Msg("Pokemon does not exist in collection")
-			return c.JSON(http.StatusNotFound, map[string]string{"error": "Pokemon not found in collection"})
+			log.Debug().Str("pokemonID", params.PokemonID).Msg("Pokemon does not exist in collection")
+			return httperrors.NewHTTPError(http.StatusNotFound, "POKEMON_NOT_FOUND", "Pokemon not found in collection")
 		}
 
 		var updateData struct {
@@ -50,7 +52,7 @@ func putEditPokemonHandler(s *api.Server) echo.HandlerFunc {
 		}
 		if err := c.Bind(&updateData); err != nil {
 			log.Debug().Err(err).Msg("Invalid request body")
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
+			return httperrors.NewHTTPError(http.StatusBadRequest, "INVALID_BODY", "Invalid request body")
 		}
 
 		if updateData.Caught != nil {
@@ -63,10 +65,10 @@ func putEditPokemonHandler(s *api.Server) echo.HandlerFunc {
 		_, err = pokemon.Update(ctx, s.DB, boil.Whitelist("caught", "nickname"))
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to update pokemon in collection")
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Could not update pokemon"})
+			return httperrors.NewHTTPError(http.StatusInternalServerError, "SERVER_ERROR", "Failed to update pokemon")
 		}
 
-		log.Info().Str("pokemonID", pokemonID).Str("userID", user.ID).Msg("Pokemon successfully updated")
+		log.Info().Str("pokemonID", params.PokemonID).Str("userID", user.ID).Msg("Pokemon successfully updated")
 		return c.JSON(http.StatusOK, map[string]string{"message": "Pokemon successfully updated"})
 	}
 }

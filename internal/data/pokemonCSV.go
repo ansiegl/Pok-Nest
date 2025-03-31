@@ -1,40 +1,44 @@
 package data
 
 import (
+	"encoding/csv"
 	"fmt"
-
-	"encoding/csv" // read csv files
-	"os"           // open and close files
-	"strconv"      // convert datatypes
+	"os"
+	"strconv"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
 	"github.com/volatiletech/null/v8"
 )
 
-// read csv
-func LoadPokemonFromCSV() ([]models.Pokemon, error) {
-	file, err := os.Open("docs/pokemon.csv") // open csv file
+func LoadPokemonFromCSV(csvPath string) ([]models.Pokemon, error) {
+	file, err := os.Open(csvPath)
 	if err != nil {
 		return nil, fmt.Errorf("Error opening CSV file: %w", err)
 	}
-	defer file.Close() // close csv file
+	defer file.Close()
 
 	reader := csv.NewReader(file)
-	records, err := reader.ReadAll() // reads csv file and saves it as string lists
-
-	if err != nil {
-		return nil, fmt.Errorf("Error while reading CSV file: %w", err)
-	}
 
 	var pokemons []models.Pokemon
+	lineNumber := 0
 
-	for i, row := range records {
+	_, err = reader.Read()
+	if err != nil {
+		return nil, fmt.Errorf("Error reading CSV header: %w", err)
+	}
 
-		if i == 0 { // skip first row
+	for {
+		lineNumber++
+		row, err := reader.Read()
+		if err != nil {
+			if err.Error() == "EOF" {
+				break
+			}
+			fmt.Printf("Error in line %d: %v\n", lineNumber, err)
 			continue
 		}
 
-		var type2 null.String // type2 can be null
+		var type2 null.String
 		if row[3] != "" {
 			type2 = null.StringFrom(row[3])
 		} else {
@@ -43,12 +47,14 @@ func LoadPokemonFromCSV() ([]models.Pokemon, error) {
 
 		gen, err := strconv.Atoi(row[11])
 		if err != nil {
-			return nil, fmt.Errorf("Error converting 'Generation' into an integer: %w", err)
+			fmt.Printf("Error in line %d: Invalid 'Generation' value (%v)\n", lineNumber, row[11])
+			continue
 		}
 
 		legendary, err := strconv.ParseBool(row[12])
 		if err != nil {
-			return nil, fmt.Errorf("Error parsing 'Legendary' value: %w", err)
+			fmt.Printf("Error in line %d: Invalid 'Legendary' value (%v)\n", lineNumber, row[12])
+			continue
 		}
 
 		pokemon := models.Pokemon{
@@ -61,5 +67,6 @@ func LoadPokemonFromCSV() ([]models.Pokemon, error) {
 
 		pokemons = append(pokemons, pokemon)
 	}
+
 	return pokemons, nil
 }
