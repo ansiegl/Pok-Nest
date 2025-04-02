@@ -7,7 +7,7 @@ paths:
       get:
         tags:
           - pokemon
-        summary: retrieve all pokemon data as JSON or search by name
+        summary: retrieve all pokemon data as JSON or search pokemon by attribute (name, type, etc.)
         operationId: getPokemonAsJson
         produces:
           - application/json
@@ -22,16 +22,31 @@ paths:
             required: false
             type: string
             description: pokemon type to search for
-          - name: generation
+          - name: hp
             in: query
             required: false
             type: integer
-            description: pokemon generation to search for
-          - name: legendary
+            description: pokemon hp to search for
+          - name: attack
             in: query
             required: false
-            type: boolean
-            description: whether to search for legendary pokemon
+            type: integer
+            description: pokemon attack to search for
+          - name: defense
+            in: query
+            required: false
+            type: integer
+            description: pokemon defense to search for
+          - name: speed
+            in: query
+            required: false
+            type: integer
+            description: pokemon speed to search for
+          - name: special
+            in: query
+            required: false
+            type: integer
+            description: pokemon special to search for
           - name: limit
             in: query
             required: false

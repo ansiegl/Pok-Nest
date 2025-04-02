@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetPokemon(t *testing.T) {
+func TestGetPokemonInCollection(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 

@@ -43,17 +43,29 @@ func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 
 		if params.Name != nil {
 			nameFormatted := cases.Title(language.English).String(strings.ToLower(*params.Name))
-			queryMods = append(queryMods, qm.Where("pokemon.name = ?", nameFormatted))
+			queryMods = append(queryMods, qm.Where("name = ?", nameFormatted))
 		}
 		if params.Type != nil {
 			typeFormatted := cases.Title(language.English).String(strings.ToLower(*params.Type))
-			queryMods = append(queryMods, qm.Where("pokemon.type_1 = ? OR pokemon.type_2 = ?", typeFormatted, typeFormatted))
+			queryMods = append(queryMods, qm.Where("type_1 = ? OR type_2 = ?", typeFormatted, typeFormatted))
 		}
-		if params.Generation != nil {
-			queryMods = append(queryMods, qm.Where("pokemon.generation = ?", *params.Generation))
+		if params.Hp != nil {
+			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
 		}
-		if params.Legendary != nil {
-			queryMods = append(queryMods, qm.Where("pokemon.legendary = ?", *params.Legendary))
+		if params.Attack != nil {
+			queryMods = append(queryMods, qm.Where("attack = ?", params.Attack))
+		}
+		if params.Hp != nil {
+			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
+		}
+		if params.Defense != nil {
+			queryMods = append(queryMods, qm.Where("defense = ?", params.Defense))
+		}
+		if params.Speed != nil {
+			queryMods = append(queryMods, qm.Where("speed = ?", params.Speed))
+		}
+		if params.Special != nil {
+			queryMods = append(queryMods, qm.Where("special = ?", params.Special))
 		}
 
 		sortOrder := "asc"
@@ -89,15 +101,19 @@ func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 		for _, collectionPokemon := range collectionPokemons {
 			pokemon := collectionPokemon.R.Pokemon
 			if pokemon != nil {
-				gen := int64(pokemon.Generation)
 				pokemonID := strfmt.UUID4(pokemon.PokemonID)
 				pokemonData = append(pokemonData, &types.Pokemon{
-					PokemonID:  &pokemonID,
-					Name:       &pokemon.Name,
-					Type1:      &pokemon.Type1,
-					Type2:      pokemon.Type2.String,
-					Generation: gen,
-					Legendary:  pokemon.Legendary,
+					PokemonID:   &pokemonID,
+					Name:        &pokemon.Name,
+					Type1:       &pokemon.Type1,
+					Type2:       pokemon.Type2.String,
+					Hp:          int64(pokemon.HP),
+					Attack:      int64(pokemon.Attack),
+					Defense:     int64(pokemon.Defense),
+					Speed:       int64(pokemon.Speed),
+					Special:     int64(pokemon.Special),
+					Png:         pokemon.PNGURL,
+					Description: pokemon.Description,
 				})
 			}
 		}

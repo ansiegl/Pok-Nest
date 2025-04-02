@@ -1,0 +1,2 @@
+(*bytes.Buffer)({"data":[{"generation":1,"name":"Golem","pokemon_id":"95978710-ab16-41f4-8015-947c6a10888d","type1":"Rock","type2":"Ground"},{"generation":1,"name":"Kakuna","pokemon_id":"bb474ab9-153d-4ee9-be9e-b65dde7d2738","type1":"Bug","type2":"Poison"},{"generation":1,"name":"Pidgey","pokemon_id":"2b37dceb-a2d3-42f7-a2fd-acd0d21bcb66","type1":"Normal","type2":"Flying"}],"pagination":{"limit":10,"total":3}}
+)

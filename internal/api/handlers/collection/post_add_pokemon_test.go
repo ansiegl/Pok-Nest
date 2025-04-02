@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestAddPokemon(t *testing.T) {
+func TestPostAddPokemonToCollection(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 
@@ -30,7 +30,7 @@ func TestAddPokemon(t *testing.T) {
 	})
 }
 
-func TestAddPokemon_AlreadyExists(t *testing.T) {
+func TestPostAddPokemonToCollectionAlreadyExists(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 
@@ -39,7 +39,7 @@ func TestAddPokemon_AlreadyExists(t *testing.T) {
 	})
 }
 
-func TestAddPokemon_NotFound(t *testing.T) {
+func TestPostAddPokemonToCollectionNotFound(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 
@@ -51,7 +51,7 @@ func TestAddPokemon_NotFound(t *testing.T) {
 	})
 }
 
-func TestAddPokemon_InvalidInput(t *testing.T) {
+func TestPostAddPokemonToCollectionInvalidInput(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 

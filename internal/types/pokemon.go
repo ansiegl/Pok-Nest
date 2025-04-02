@@ -19,18 +19,34 @@ import (
 // swagger:model pokemon
 type Pokemon struct {
 
-	// generation of the pokemon
-	// Example: 1
-	Generation int64 `json:"generation,omitempty"`
+	// attack of pokemon
+	// Example: 49
+	Attack int64 `json:"attack,omitempty"`
 
-	// is the pokemon legendary?
-	// Example: false
-	Legendary bool `json:"legendary,omitempty"`
+	// defense of pokemon
+	// Example: 49
+	Defense int64 `json:"defense,omitempty"`
 
-	// name of the pokemon
-	// Example: Pikachu
+	// description of pokemon
+	// Example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokemon.
+	Description string `json:"description,omitempty"`
+
+	// gif of pokemon
+	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+	Gif string `json:"gif,omitempty"`
+
+	// hp of pokemon
+	// Example: 45
+	Hp int64 `json:"hp,omitempty"`
+
+	// name of pokemon
+	// Example: Bulbasaur
 	// Required: true
 	Name *string `json:"name"`
+
+	// png of pokemon
+	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+	Png string `json:"png,omitempty"`
 
 	// ID of the pokemon
 	// Example: 891d37d3-c74f-493e-aea8-af73efd92016
@@ -38,13 +54,21 @@ type Pokemon struct {
 	// Format: uuid4
 	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
 
-	// first type of the pokemon
-	// Example: Electric
+	// special of pokemon
+	// Example: 65
+	Special int64 `json:"special,omitempty"`
+
+	// speed of pokemon
+	// Example: 45
+	Speed int64 `json:"speed,omitempty"`
+
+	// first type of pokemon
+	// Example: Grass
 	// Required: true
 	Type1 *string `json:"type1"`
 
-	// second type of the pokemon
-	// Example: Flying
+	// second type of pokemon
+	// Example: Poison
 	Type2 string `json:"type2,omitempty"`
 }
 

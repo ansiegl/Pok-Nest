@@ -35,15 +35,22 @@ func TestGetPokemonDownload(t *testing.T) {
 
 		// check length and first row (title) of csvData
 		assert.Equal(t, int(totalCount)+1, len(csvData))
-		assert.Equal(t, []string{"PokemonID", "Name", "Type1", "Type2", "Generation", "Legendary"}, csvData[0])
+		assert.Equal(t, []string{"PokemonID", "Name", "Type 1", "Type 2", "HP", "Attack", "Defense", "Speed", "Special", "Gif URL", "PNG URL", "Description"}, csvData[0])
 
 		// check first pokemon
 		assert.Equal(t, []string{fixtures.PokemonNotInCollection.PokemonID,
 			fixtures.PokemonNotInCollection.Name,
 			fixtures.PokemonNotInCollection.Type1,
 			fixtures.PokemonNotInCollection.Type2.String,
-			strconv.Itoa(fixtures.PokemonNotInCollection.Generation),
-			strconv.FormatBool(fixtures.PokemonNotInCollection.Legendary)}, csvData[1])
+			strconv.Itoa(fixtures.PokemonNotInCollection.HP),
+			strconv.Itoa(fixtures.PokemonNotInCollection.Attack),
+			strconv.Itoa(fixtures.PokemonNotInCollection.Defense),
+			strconv.Itoa(fixtures.PokemonNotInCollection.Speed),
+			strconv.Itoa(fixtures.PokemonNotInCollection.Special),
+			fixtures.PokemonNotInCollection.GifURL,
+			fixtures.PokemonNotInCollection.PNGURL,
+			fixtures.PokemonNotInCollection.Description,
+		}, csvData[1])
 
 	})
 

@@ -29,7 +29,7 @@ func getPokemonDownloadHandler(s *api.Server) echo.HandlerFunc {
 		var csvBuffer bytes.Buffer
 		writer := csv.NewWriter(&csvBuffer)
 
-		header := []string{"PokemonID", "Name", "Type1", "Type2", "Generation", "Legendary"}
+		header := []string{"PokemonID", "Name", "Type 1", "Type 2", "HP", "Attack", "Defense", "Speed", "Special", "Gif URL", "PNG URL", "Description"}
 		if err := writer.Write(header); err != nil {
 			log.Err(err).Msg("Failed to write CSV header")
 			return err
@@ -41,8 +41,14 @@ func getPokemonDownloadHandler(s *api.Server) echo.HandlerFunc {
 				p.Name,
 				p.Type1,
 				p.Type2.String,
-				strconv.Itoa(p.Generation),
-				boolToString(p.Legendary),
+				strconv.Itoa(p.HP),
+				strconv.Itoa(p.Attack),
+				strconv.Itoa(p.Defense),
+				strconv.Itoa(p.Speed),
+				strconv.Itoa(p.Special),
+				p.GifURL,
+				p.PNGURL,
+				p.Description,
 			}
 			if err := writer.Write(row); err != nil {
 				log.Err(err).Msg("Failed to write CSV row")
@@ -67,11 +73,4 @@ func getPokemonDownloadHandler(s *api.Server) echo.HandlerFunc {
 
 		return nil
 	}
-}
-
-func boolToString(b bool) string {
-	if b {
-		return "true"
-	}
-	return "false"
 }

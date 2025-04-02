@@ -24,47 +24,77 @@ import (
 
 // Pokemon is an object representing the database table.
 type Pokemon struct {
-	PokemonID  string      `boil:"pokemon_id" json:"pokemon_id" toml:"pokemon_id" yaml:"pokemon_id"`
-	Name       string      `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Type1      string      `boil:"type_1" json:"type_1" toml:"type_1" yaml:"type_1"`
-	Type2      null.String `boil:"type_2" json:"type_2,omitempty" toml:"type_2" yaml:"type_2,omitempty"`
-	Generation int         `boil:"generation" json:"generation" toml:"generation" yaml:"generation"`
-	Legendary  bool        `boil:"legendary" json:"legendary" toml:"legendary" yaml:"legendary"`
+	PokemonID   string      `boil:"pokemon_id" json:"pokemon_id" toml:"pokemon_id" yaml:"pokemon_id"`
+	Name        string      `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Type1       string      `boil:"type_1" json:"type_1" toml:"type_1" yaml:"type_1"`
+	Type2       null.String `boil:"type_2" json:"type_2,omitempty" toml:"type_2" yaml:"type_2,omitempty"`
+	HP          int         `boil:"hp" json:"hp" toml:"hp" yaml:"hp"`
+	Attack      int         `boil:"attack" json:"attack" toml:"attack" yaml:"attack"`
+	Defense     int         `boil:"defense" json:"defense" toml:"defense" yaml:"defense"`
+	Speed       int         `boil:"speed" json:"speed" toml:"speed" yaml:"speed"`
+	Special     int         `boil:"special" json:"special" toml:"special" yaml:"special"`
+	GifURL      string      `boil:"gif_url" json:"gif_url" toml:"gif_url" yaml:"gif_url"`
+	PNGURL      string      `boil:"png_url" json:"png_url" toml:"png_url" yaml:"png_url"`
+	Description string      `boil:"description" json:"description" toml:"description" yaml:"description"`
 
 	R *pokemonR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L pokemonL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var PokemonColumns = struct {
-	PokemonID  string
-	Name       string
-	Type1      string
-	Type2      string
-	Generation string
-	Legendary  string
+	PokemonID   string
+	Name        string
+	Type1       string
+	Type2       string
+	HP          string
+	Attack      string
+	Defense     string
+	Speed       string
+	Special     string
+	GifURL      string
+	PNGURL      string
+	Description string
 }{
-	PokemonID:  "pokemon_id",
-	Name:       "name",
-	Type1:      "type_1",
-	Type2:      "type_2",
-	Generation: "generation",
-	Legendary:  "legendary",
+	PokemonID:   "pokemon_id",
+	Name:        "name",
+	Type1:       "type_1",
+	Type2:       "type_2",
+	HP:          "hp",
+	Attack:      "attack",
+	Defense:     "defense",
+	Speed:       "speed",
+	Special:     "special",
+	GifURL:      "gif_url",
+	PNGURL:      "png_url",
+	Description: "description",
 }
 
 var PokemonTableColumns = struct {
-	PokemonID  string
-	Name       string
-	Type1      string
-	Type2      string
-	Generation string
-	Legendary  string
+	PokemonID   string
+	Name        string
+	Type1       string
+	Type2       string
+	HP          string
+	Attack      string
+	Defense     string
+	Speed       string
+	Special     string
+	GifURL      string
+	PNGURL      string
+	Description string
 }{
-	PokemonID:  "pokemon.pokemon_id",
-	Name:       "pokemon.name",
-	Type1:      "pokemon.type_1",
-	Type2:      "pokemon.type_2",
-	Generation: "pokemon.generation",
-	Legendary:  "pokemon.legendary",
+	PokemonID:   "pokemon.pokemon_id",
+	Name:        "pokemon.name",
+	Type1:       "pokemon.type_1",
+	Type2:       "pokemon.type_2",
+	HP:          "pokemon.hp",
+	Attack:      "pokemon.attack",
+	Defense:     "pokemon.defense",
+	Speed:       "pokemon.speed",
+	Special:     "pokemon.special",
+	GifURL:      "pokemon.gif_url",
+	PNGURL:      "pokemon.png_url",
+	Description: "pokemon.description",
 }
 
 // Generated where
@@ -92,29 +122,32 @@ func (w whereHelperint) NIN(slice []int) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
-type whereHelperbool struct{ field string }
-
-func (w whereHelperbool) EQ(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperbool) NEQ(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperbool) LT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperbool) LTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperbool) GT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperbool) GTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-
 var PokemonWhere = struct {
-	PokemonID  whereHelperstring
-	Name       whereHelperstring
-	Type1      whereHelperstring
-	Type2      whereHelpernull_String
-	Generation whereHelperint
-	Legendary  whereHelperbool
+	PokemonID   whereHelperstring
+	Name        whereHelperstring
+	Type1       whereHelperstring
+	Type2       whereHelpernull_String
+	HP          whereHelperint
+	Attack      whereHelperint
+	Defense     whereHelperint
+	Speed       whereHelperint
+	Special     whereHelperint
+	GifURL      whereHelperstring
+	PNGURL      whereHelperstring
+	Description whereHelperstring
 }{
-	PokemonID:  whereHelperstring{field: "\"pokemon\".\"pokemon_id\""},
-	Name:       whereHelperstring{field: "\"pokemon\".\"name\""},
-	Type1:      whereHelperstring{field: "\"pokemon\".\"type_1\""},
-	Type2:      whereHelpernull_String{field: "\"pokemon\".\"type_2\""},
-	Generation: whereHelperint{field: "\"pokemon\".\"generation\""},
-	Legendary:  whereHelperbool{field: "\"pokemon\".\"legendary\""},
+	PokemonID:   whereHelperstring{field: "\"pokemon\".\"pokemon_id\""},
+	Name:        whereHelperstring{field: "\"pokemon\".\"name\""},
+	Type1:       whereHelperstring{field: "\"pokemon\".\"type_1\""},
+	Type2:       whereHelpernull_String{field: "\"pokemon\".\"type_2\""},
+	HP:          whereHelperint{field: "\"pokemon\".\"hp\""},
+	Attack:      whereHelperint{field: "\"pokemon\".\"attack\""},
+	Defense:     whereHelperint{field: "\"pokemon\".\"defense\""},
+	Speed:       whereHelperint{field: "\"pokemon\".\"speed\""},
+	Special:     whereHelperint{field: "\"pokemon\".\"special\""},
+	GifURL:      whereHelperstring{field: "\"pokemon\".\"gif_url\""},
+	PNGURL:      whereHelperstring{field: "\"pokemon\".\"png_url\""},
+	Description: whereHelperstring{field: "\"pokemon\".\"description\""},
 }
 
 // PokemonRels is where relationship names are stored.
@@ -145,8 +178,8 @@ func (r *pokemonR) GetCollectionPokemons() CollectionPokemonSlice {
 type pokemonL struct{}
 
 var (
-	pokemonAllColumns            = []string{"pokemon_id", "name", "type_1", "type_2", "generation", "legendary"}
-	pokemonColumnsWithoutDefault = []string{"name", "type_1", "generation", "legendary"}
+	pokemonAllColumns            = []string{"pokemon_id", "name", "type_1", "type_2", "hp", "attack", "defense", "speed", "special", "gif_url", "png_url", "description"}
+	pokemonColumnsWithoutDefault = []string{"name", "type_1", "hp", "attack", "defense", "speed", "special", "gif_url", "png_url", "description"}
 	pokemonColumnsWithDefault    = []string{"pokemon_id", "type_2"}
 	pokemonPrimaryKeyColumns     = []string{"pokemon_id"}
 	pokemonGeneratedColumns      = []string{}

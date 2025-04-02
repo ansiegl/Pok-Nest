@@ -55,10 +55,8 @@ func seedCmdFunc() {
 func ApplySeedFixtures(ctx context.Context, config config.Server) error {
 	log := util.LogFromContext(ctx)
 
-	// Debugging: Ausgabe des CSV-Pfads
 	log.Info().Str("csvPath", pokemonCSVPath).Msg("CSV Path received")
 
-	// Überprüfe, ob die Datei existiert
 	if _, err := os.Stat(pokemonCSVPath); os.IsNotExist(err) {
 		return fmt.Errorf("CSV file does not exist: %s", pokemonCSVPath)
 	}
@@ -74,7 +72,6 @@ func ApplySeedFixtures(ctx context.Context, config config.Server) error {
 	}
 
 	return dbutil.WithTransaction(ctx, db, func(tx boil.ContextExecutor) error {
-		// Ausführlichere Debugging-Ausgabe
 		pokemonCount, err := models.Pokemons().Count(ctx, tx)
 		log.Info().
 			Int64("pokemonCount", pokemonCount).

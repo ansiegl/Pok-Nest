@@ -44,14 +44,18 @@ type GetPokemonInCollectionParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*pokemon generation to search for
+	/*pokemon attack to search for
 	  In: query
 	*/
-	Generation *int64 `query:"generation"`
-	/*whether to search for legendary pokemon
+	Attack *int64 `query:"attack"`
+	/*pokemon defense to search for
 	  In: query
 	*/
-	Legendary *bool `query:"legendary"`
+	Defense *int64 `query:"defense"`
+	/*pokemon hp to search for
+	  In: query
+	*/
+	Hp *int64 `query:"hp"`
 	/*number of pokemon to return per page
 	  Maximum: 20
 	  In: query
@@ -72,6 +76,14 @@ type GetPokemonInCollectionParams struct {
 	  In: query
 	*/
 	SortOrder *string `query:"sortOrder"`
+	/*pokemon special to search for
+	  In: query
+	*/
+	Special *int64 `query:"special"`
+	/*pokemon speed to search for
+	  In: query
+	*/
+	Speed *int64 `query:"speed"`
 	/*pokemon type to search for
 	  In: query
 	*/
@@ -89,13 +101,18 @@ func (o *GetPokemonInCollectionParams) BindRequest(r *http.Request, route *middl
 
 	qs := runtime.Values(r.URL.Query())
 
-	qGeneration, qhkGeneration, _ := qs.GetOK("generation")
-	if err := o.bindGeneration(qGeneration, qhkGeneration, route.Formats); err != nil {
+	qAttack, qhkAttack, _ := qs.GetOK("attack")
+	if err := o.bindAttack(qAttack, qhkAttack, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
-	qLegendary, qhkLegendary, _ := qs.GetOK("legendary")
-	if err := o.bindLegendary(qLegendary, qhkLegendary, route.Formats); err != nil {
+	qDefense, qhkDefense, _ := qs.GetOK("defense")
+	if err := o.bindDefense(qDefense, qhkDefense, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qHp, qhkHp, _ := qs.GetOK("hp")
+	if err := o.bindHp(qHp, qhkHp, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -119,6 +136,16 @@ func (o *GetPokemonInCollectionParams) BindRequest(r *http.Request, route *middl
 		res = append(res, err)
 	}
 
+	qSpecial, qhkSpecial, _ := qs.GetOK("special")
+	if err := o.bindSpecial(qSpecial, qhkSpecial, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qSpeed, qhkSpeed, _ := qs.GetOK("speed")
+	if err := o.bindSpeed(qSpeed, qhkSpeed, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qType, qhkType, _ := qs.GetOK("type")
 	if err := o.bindType(qType, qhkType, route.Formats); err != nil {
 		res = append(res, err)
@@ -133,11 +160,15 @@ func (o *GetPokemonInCollectionParams) BindRequest(r *http.Request, route *middl
 func (o *GetPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// generation
+	// attack
 	// Required: false
 	// AllowEmptyValue: false
 
-	// legendary
+	// defense
+	// Required: false
+	// AllowEmptyValue: false
+
+	// hp
 	// Required: false
 	// AllowEmptyValue: false
 
@@ -169,6 +200,14 @@ func (o *GetPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	// special
+	// Required: false
+	// AllowEmptyValue: false
+
+	// speed
+	// Required: false
+	// AllowEmptyValue: false
+
 	// type
 	// Required: false
 	// AllowEmptyValue: false
@@ -179,8 +218,8 @@ func (o *GetPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// bindGeneration binds and validates parameter Generation from query.
-func (o *GetPokemonInCollectionParams) bindGeneration(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindAttack binds and validates parameter Attack from query.
+func (o *GetPokemonInCollectionParams) bindAttack(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -194,15 +233,15 @@ func (o *GetPokemonInCollectionParams) bindGeneration(rawData []string, hasKey b
 
 	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("generation", "query", "int64", raw)
+		return errors.InvalidType("attack", "query", "int64", raw)
 	}
-	o.Generation = &value
+	o.Attack = &value
 
 	return nil
 }
 
-// bindLegendary binds and validates parameter Legendary from query.
-func (o *GetPokemonInCollectionParams) bindLegendary(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindDefense binds and validates parameter Defense from query.
+func (o *GetPokemonInCollectionParams) bindDefense(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -214,11 +253,33 @@ func (o *GetPokemonInCollectionParams) bindLegendary(rawData []string, hasKey bo
 		return nil
 	}
 
-	value, err := swag.ConvertBool(raw)
+	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("legendary", "query", "bool", raw)
+		return errors.InvalidType("defense", "query", "int64", raw)
 	}
-	o.Legendary = &value
+	o.Defense = &value
+
+	return nil
+}
+
+// bindHp binds and validates parameter Hp from query.
+func (o *GetPokemonInCollectionParams) bindHp(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("hp", "query", "int64", raw)
+	}
+	o.Hp = &value
 
 	return nil
 }
@@ -358,6 +419,50 @@ func (o *GetPokemonInCollectionParams) validateSortOrder(formats strfmt.Registry
 	if err := validate.EnumCase("sortOrder", "query", *o.SortOrder, []interface{}{"asc", "desc"}, true); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// bindSpecial binds and validates parameter Special from query.
+func (o *GetPokemonInCollectionParams) bindSpecial(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("special", "query", "int64", raw)
+	}
+	o.Special = &value
+
+	return nil
+}
+
+// bindSpeed binds and validates parameter Speed from query.
+func (o *GetPokemonInCollectionParams) bindSpeed(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("speed", "query", "int64", raw)
+	}
+	o.Speed = &value
 
 	return nil
 }

@@ -10,6 +10,14 @@ import (
 	"github.com/volatiletech/null/v8"
 )
 
+func validateStats(statStr string) (int, error) {
+	stat, err := strconv.Atoi(statStr)
+	if err != nil || stat < 0 {
+		return 0, fmt.Errorf("invalid stat value: %v", statStr)
+	}
+	return stat, nil
+}
+
 func LoadPokemonFromCSV(csvPath string) ([]models.Pokemon, error) {
 	file, err := os.Open(csvPath)
 	if err != nil {
@@ -45,24 +53,48 @@ func LoadPokemonFromCSV(csvPath string) ([]models.Pokemon, error) {
 			type2 = null.String{Valid: false}
 		}
 
-		gen, err := strconv.Atoi(row[11])
+		hp, err := validateStats(row[4])
 		if err != nil {
-			fmt.Printf("Error in line %d: Invalid 'Generation' value (%v)\n", lineNumber, row[11])
+			fmt.Printf("Error in line %d: Invalid 'HP' value (%v)\n", lineNumber, row[4])
 			continue
 		}
 
-		legendary, err := strconv.ParseBool(row[12])
+		attack, err := validateStats(row[5])
 		if err != nil {
-			fmt.Printf("Error in line %d: Invalid 'Legendary' value (%v)\n", lineNumber, row[12])
+			fmt.Printf("Error in line %d: Invalid 'Attack' value (%v)\n", lineNumber, row[5])
+			continue
+		}
+
+		defense, err := validateStats(row[6])
+		if err != nil {
+			fmt.Printf("Error in line %d: Invalid 'Defense' value (%v)\n", lineNumber, row[6])
+			continue
+		}
+
+		speed, err := validateStats(row[7])
+		if err != nil {
+			fmt.Printf("Error in line %d: Invalid 'Speed' value (%v)\n", lineNumber, row[7])
+			continue
+		}
+
+		special, err := validateStats(row[8])
+		if err != nil {
+			fmt.Printf("Error in line %d: Invalid 'Special' value (%v)\n", lineNumber, row[8])
 			continue
 		}
 
 		pokemon := models.Pokemon{
-			Name:       row[1],
-			Type1:      row[2],
-			Type2:      type2,
-			Generation: gen,
-			Legendary:  legendary,
+			Name:        row[1],
+			Type1:       row[2],
+			Type2:       type2,
+			HP:          hp,
+			Attack:      attack,
+			Defense:     defense,
+			Speed:       speed,
+			Special:     special,
+			GifURL:      row[9],
+			PNGURL:      row[10],
+			Description: row[11],
 		}
 
 		pokemons = append(pokemons, pokemon)

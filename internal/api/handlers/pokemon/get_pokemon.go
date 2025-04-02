@@ -41,11 +41,23 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 			typeFormatted := cases.Title(language.English).String(strings.ToLower(*params.Type))
 			queryMods = append(queryMods, qm.Where("type_1 = ? OR type_2 = ?", typeFormatted, typeFormatted))
 		}
-		if params.Generation != nil {
-			queryMods = append(queryMods, qm.Where("generation = ?", params.Generation))
+		if params.Hp != nil {
+			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
 		}
-		if params.Legendary != nil {
-			queryMods = append(queryMods, qm.Where("legendary = ?", params.Legendary))
+		if params.Attack != nil {
+			queryMods = append(queryMods, qm.Where("attack = ?", params.Attack))
+		}
+		if params.Hp != nil {
+			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
+		}
+		if params.Defense != nil {
+			queryMods = append(queryMods, qm.Where("defense = ?", params.Defense))
+		}
+		if params.Speed != nil {
+			queryMods = append(queryMods, qm.Where("speed = ?", params.Speed))
+		}
+		if params.Special != nil {
+			queryMods = append(queryMods, qm.Where("special = ?", params.Special))
 		}
 
 		sortOrder := "asc"
@@ -79,16 +91,20 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 
 		var pokemonData []*types.Pokemon
 		for _, p := range pokemons {
-			gen := int64(p.Generation)
 			pokemonID := strfmt.UUID4(p.PokemonID)
 
 			pokemonData = append(pokemonData, &types.Pokemon{
-				PokemonID:  &pokemonID,
-				Name:       &p.Name,
-				Type1:      &p.Type1,
-				Type2:      p.Type2.String,
-				Generation: gen,
-				Legendary:  p.Legendary,
+				PokemonID:   &pokemonID,
+				Name:        &p.Name,
+				Type1:       &p.Type1,
+				Type2:       p.Type2.String,
+				Hp:          int64(p.HP),
+				Attack:      int64(p.Attack),
+				Defense:     int64(p.Defense),
+				Speed:       int64(p.Speed),
+				Special:     int64(p.Special),
+				Png:         p.PNGURL,
+				Description: p.Description,
 			})
 		}
 

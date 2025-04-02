@@ -4,6 +4,28 @@ info:
   version: 0.1.0
 paths:
   /api/v1/pokemon/{pokemonId}:
+    get:
+      tags:
+        - pokemon
+      summary: retrieve details for a specific pokemon by id
+      operationId: getPokemonDetails
+      produces:
+        - application/json
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: id of pokemon
+      responses:
+        "200":
+          description: GetPokemonResponse
+          schema:
+            $ref: "../definitions/pokemon.yml#/definitions/GetPokemonResponse"
+        "400":
+          description: invalid id 
+        "404":
+          description: pokemon not found
     post:
       security:
         - Bearer: []
@@ -25,7 +47,7 @@ paths:
         "201":
           description: pokemon added to collection successfully
         "400":
-          description: invalid input data (e.g., invalid date or nickname)
+          description: invalid input data
         "409":
           description: pokemon is already in the collection
         "404":
@@ -49,16 +71,31 @@ paths:
           required: false
           type: string
           description: pokemon type to search for
-        - name: generation
+        - name: hp
           in: query
           required: false
           type: integer
-          description: pokemon generation to search for
-        - name: legendary
+          description: pokemon hp to search for
+        - name: attack
           in: query
           required: false
-          type: boolean
-          description: whether to search for legendary pokemon
+          type: integer
+          description: pokemon attack to search for
+        - name: defense
+          in: query
+          required: false
+          type: integer
+          description: pokemon defense to search for
+        - name: speed
+          in: query
+          required: false
+          type: integer
+          description: pokemon speed to search for
+        - name: special
+          in: query
+          required: false
+          type: integer
+          description: pokemon special to search for
         - name: limit
           in: query
           required: false
@@ -87,6 +124,26 @@ paths:
           "400":
             description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - collection
+      summary: retrieve details for a pokemon from collection
+      operationId: getPokemonInCollectionDetails
+      parameters:
+        - name: pokemonId
+          in: path
+          required: true
+          type: string
+          description: pokemon ID to retrieve details for
+      responses:
+        "200":
+          description: GetPokemonInCollectionResponse
+          schema:
+            $ref: "../definitions/collection.yml#/definitions/GetPokemonInCollectionResponse"
+        "404":
+          description: pokemon or collection not found
     delete:
       security:
         - Bearer: []

@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPutEditPokemon_DatabaseUpdate(t *testing.T) {
+func TestPutEditPokemon(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 		ctx := context.Background()
