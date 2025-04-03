@@ -12,21 +12,22 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/types/collection"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-func GetPokemonDetailsRoute(s *api.Server) *echo.Route {
-	return s.Router.APIV1Collection.GET("/pokemon/:pokemonId", getPokemonDetailsHandler(s))
+func GetCollectionPokemonDetailRoute(s *api.Server) *echo.Route {
+	return s.Router.APIV1Collection.GET("/pokemon/:pokemonId", getCollectionPokemonDetailHandler(s))
 }
 
-func getPokemonDetailsHandler(s *api.Server) echo.HandlerFunc {
+func getCollectionPokemonDetailHandler(s *api.Server) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
 		user := auth.UserFromContext(ctx)
 
-		params := collection.NewGetPokemonInCollectionDetailsParams()
+		params := collection.NewGetCollectionPokemonDetailParams()
 		err := util.BindAndValidatePathAndQueryParams(c, &params)
 		if err != nil {
 			return err
@@ -51,19 +52,35 @@ func getPokemonDetailsHandler(s *api.Server) echo.HandlerFunc {
 			return httperrors.NewHTTPError(http.StatusNotFound, "POKEMONDETAILS_NOT_FOUND", fmt.Sprintf("Pokemon details for %v not available", params.PokemonID))
 		}
 
+		var caughtDate strfmt.Date
+		if collectionPokemon.Caught.Valid {
+			caughtDate = strfmt.Date(collectionPokemon.Caught.Time)
+		} else {
+			caughtDate = strfmt.Date{}
+		}
+
+		var nameOrNickname *string
+		if collectionPokemon.Nickname.Valid && collectionPokemon.Nickname.String != "" {
+			nameOrNickname = &collectionPokemon.Nickname.String
+		} else {
+			nameOrNickname = &pokemon.Name
+		}
+
 		pokemonIDStr := strfmt.UUID4(pokemon.PokemonID)
-		response := &types.Pokemon{
-			PokemonID:   &pokemonIDStr,
-			Name:        &pokemon.Name,
-			Type1:       &pokemon.Type1,
-			Type2:       pokemon.Type2.String,
-			Hp:          int64(pokemon.HP),
-			Attack:      int64(pokemon.Attack),
-			Defense:     int64(pokemon.Defense),
-			Speed:       int64(pokemon.Speed),
-			Special:     int64(pokemon.Special),
-			Png:         pokemon.PNGURL,
-			Description: pokemon.Description,
+		response := &types.CollectionPokemonDetail{
+			PokemonID:      &pokemonIDStr,
+			NameOrNickname: nameOrNickname,
+			Type1:          &pokemon.Type1,
+			Type2:          pokemon.Type2.String,
+			Hp:             swag.Int64(int64(pokemon.HP)),
+			Attack:         swag.Int64(int64(pokemon.Attack)),
+			Defense:        swag.Int64(int64(pokemon.Defense)),
+			Speed:          swag.Int64(int64(pokemon.Speed)),
+			Special:        swag.Int64(int64(pokemon.Special)),
+			Png:            &pokemon.PNGURL,
+			Gif:            &pokemon.GifURL,
+			Description:    &pokemon.Description,
+			Caught:         &caughtDate,
 		}
 
 		return util.ValidateAndReturn(c, http.StatusOK, response)

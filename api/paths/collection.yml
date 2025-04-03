@@ -8,7 +8,7 @@ paths:
       tags:
         - pokemon
       summary: retrieve details for a specific pokemon by id
-      operationId: getPokemonDetails
+      operationId: getPokemon
       produces:
         - application/json
       parameters:
@@ -39,10 +39,10 @@ paths:
           required: true
           type: string
           description: pokemon's ID to add to the collection
-        - name: caught
+        - name: body
           in: body
           schema:
-            $ref: '../definitions/collection.yml#/definitions/Collection'
+            $ref: '../definitions/collection.yml#/definitions/PokemonBody'
       responses:
         "201":
           description: pokemon added to collection successfully
@@ -59,7 +59,7 @@ paths:
       tags:
         - collection
       summary: get all pokemon in collection or search pokemon by attribute (name, type, etc.)
-      operationId: getPokemonInCollection
+      operationId: getCollectionPokemon
       parameters:
         - name: name
           in: query
@@ -118,9 +118,9 @@ paths:
           description: order for the results ("asc" ascending, "desc" descending)
       responses:
           "200":
-            description: GetPokemonInCollectionResponse
+            description: GetCollectionPokemonResponse
             schema:
-              $ref: "../definitions/collection.yml#/definitions/GetPokemonInCollectionResponse"
+              $ref: "../definitions/collection.yml#/definitions/GetCollectionPokemonResponse"
           "400":
             description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
@@ -130,7 +130,7 @@ paths:
       tags:
         - collection
       summary: retrieve details for a pokemon from collection
-      operationId: getPokemonInCollectionDetails
+      operationId: getCollectionPokemonDetail
       parameters:
         - name: pokemonId
           in: path
@@ -139,9 +139,9 @@ paths:
           description: pokemon ID to retrieve details for
       responses:
         "200":
-          description: GetPokemonInCollectionResponse
+          description: GetCollectionPokemonDetailResponse
           schema:
-            $ref: "../definitions/collection.yml#/definitions/GetPokemonInCollectionResponse"
+            $ref: "../definitions/collection.yml#/definitions/GetCollectionPokemonDetailResponse"
         "404":
           description: pokemon or collection not found
     delete:
@@ -175,12 +175,13 @@ paths:
           in: path
           required: true
           type: string
-          description: pokemon's ID to edit
-        - name: caught
+          description: pokemon id to edit
+        - name: body
           in: body
           required: true
+          description: nickname and caught date
           schema:
-            $ref: '../definitions/collection.yml#/definitions/Collection'
+            $ref: '../definitions/collection.yml#/definitions/PokemonBody'
       responses:
         "200":
           description: pokemon updated in collection successfully
@@ -188,4 +189,6 @@ paths:
           description: invalid input data
         "404":
           description: pokemon or collection not found
- 
+
+
+  

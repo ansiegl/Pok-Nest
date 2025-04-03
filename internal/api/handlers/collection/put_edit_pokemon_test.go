@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"testing"
-	"time"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
@@ -27,7 +26,7 @@ func TestPutEditPokemon(t *testing.T) {
 
 		// set new values
 		newNickname := "TestNickname"
-		newCaughtTime := time.Date(0, 1, 1, 15, 9, 0, 0, time.UTC)
+		newCaughtTime := "2024-03-30"
 
 		updateBody := map[string]interface{}{
 			"nickname": newNickname,

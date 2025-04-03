@@ -16,9 +16,9 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// NewGetPokemonInCollectionParams creates a new GetPokemonInCollectionParams object
+// NewGetCollectionPokemonParams creates a new GetCollectionPokemonParams object
 // with the default values initialized.
-func NewGetPokemonInCollectionParams() GetPokemonInCollectionParams {
+func NewGetCollectionPokemonParams() GetCollectionPokemonParams {
 
 	var (
 		// initialize parameters with default values
@@ -28,18 +28,18 @@ func NewGetPokemonInCollectionParams() GetPokemonInCollectionParams {
 		offsetDefault = int64(0)
 	)
 
-	return GetPokemonInCollectionParams{
+	return GetCollectionPokemonParams{
 		Limit: &limitDefault,
 
 		Offset: &offsetDefault,
 	}
 }
 
-// GetPokemonInCollectionParams contains all the bound params for the get pokemon in collection operation
+// GetCollectionPokemonParams contains all the bound params for the get collection pokemon operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getPokemonInCollection
-type GetPokemonInCollectionParams struct {
+// swagger:parameters getCollectionPokemon
+type GetCollectionPokemonParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -93,8 +93,8 @@ type GetPokemonInCollectionParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetPokemonInCollectionParams() beforehand.
-func (o *GetPokemonInCollectionParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetCollectionPokemonParams() beforehand.
+func (o *GetCollectionPokemonParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -157,7 +157,7 @@ func (o *GetPokemonInCollectionParams) BindRequest(r *http.Request, route *middl
 	return nil
 }
 
-func (o *GetPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// attack
@@ -219,7 +219,7 @@ func (o *GetPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
 }
 
 // bindAttack binds and validates parameter Attack from query.
-func (o *GetPokemonInCollectionParams) bindAttack(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindAttack(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -241,7 +241,7 @@ func (o *GetPokemonInCollectionParams) bindAttack(rawData []string, hasKey bool,
 }
 
 // bindDefense binds and validates parameter Defense from query.
-func (o *GetPokemonInCollectionParams) bindDefense(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindDefense(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -263,7 +263,7 @@ func (o *GetPokemonInCollectionParams) bindDefense(rawData []string, hasKey bool
 }
 
 // bindHp binds and validates parameter Hp from query.
-func (o *GetPokemonInCollectionParams) bindHp(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindHp(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -285,7 +285,7 @@ func (o *GetPokemonInCollectionParams) bindHp(rawData []string, hasKey bool, for
 }
 
 // bindLimit binds and validates parameter Limit from query.
-func (o *GetPokemonInCollectionParams) bindLimit(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindLimit(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -294,7 +294,7 @@ func (o *GetPokemonInCollectionParams) bindLimit(rawData []string, hasKey bool, 
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewGetPokemonInCollectionParams()
+		// Default values have been previously initialized by NewGetCollectionPokemonParams()
 		return nil
 	}
 
@@ -312,7 +312,7 @@ func (o *GetPokemonInCollectionParams) bindLimit(rawData []string, hasKey bool, 
 }
 
 // validateLimit carries on validations for parameter Limit
-func (o *GetPokemonInCollectionParams) validateLimit(formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) validateLimit(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.Limit == nil {
@@ -327,7 +327,7 @@ func (o *GetPokemonInCollectionParams) validateLimit(formats strfmt.Registry) er
 }
 
 // bindName binds and validates parameter Name from query.
-func (o *GetPokemonInCollectionParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -345,7 +345,7 @@ func (o *GetPokemonInCollectionParams) bindName(rawData []string, hasKey bool, f
 }
 
 // bindOffset binds and validates parameter Offset from query.
-func (o *GetPokemonInCollectionParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -354,7 +354,7 @@ func (o *GetPokemonInCollectionParams) bindOffset(rawData []string, hasKey bool,
 	// Required: false
 	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewGetPokemonInCollectionParams()
+		// Default values have been previously initialized by NewGetCollectionPokemonParams()
 		return nil
 	}
 
@@ -372,7 +372,7 @@ func (o *GetPokemonInCollectionParams) bindOffset(rawData []string, hasKey bool,
 }
 
 // validateOffset carries on validations for parameter Offset
-func (o *GetPokemonInCollectionParams) validateOffset(formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) validateOffset(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.Offset == nil {
@@ -387,7 +387,7 @@ func (o *GetPokemonInCollectionParams) validateOffset(formats strfmt.Registry) e
 }
 
 // bindSortOrder binds and validates parameter SortOrder from query.
-func (o *GetPokemonInCollectionParams) bindSortOrder(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindSortOrder(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -409,7 +409,7 @@ func (o *GetPokemonInCollectionParams) bindSortOrder(rawData []string, hasKey bo
 }
 
 // validateSortOrder carries on validations for parameter SortOrder
-func (o *GetPokemonInCollectionParams) validateSortOrder(formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) validateSortOrder(formats strfmt.Registry) error {
 
 	// Required: false
 	if o.SortOrder == nil {
@@ -424,7 +424,7 @@ func (o *GetPokemonInCollectionParams) validateSortOrder(formats strfmt.Registry
 }
 
 // bindSpecial binds and validates parameter Special from query.
-func (o *GetPokemonInCollectionParams) bindSpecial(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindSpecial(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -446,7 +446,7 @@ func (o *GetPokemonInCollectionParams) bindSpecial(rawData []string, hasKey bool
 }
 
 // bindSpeed binds and validates parameter Speed from query.
-func (o *GetPokemonInCollectionParams) bindSpeed(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindSpeed(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -468,7 +468,7 @@ func (o *GetPokemonInCollectionParams) bindSpeed(rawData []string, hasKey bool, 
 }
 
 // bindType binds and validates parameter Type from query.
-func (o *GetPokemonInCollectionParams) bindType(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonParams) bindType(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

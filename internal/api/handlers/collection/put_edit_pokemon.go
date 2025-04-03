@@ -8,6 +8,7 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/api/auth"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
+	"github.com/ansiegl/Pok-Nest.git/internal/types"
 	"github.com/ansiegl/Pok-Nest.git/internal/types/collection"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/labstack/echo/v4"
@@ -46,20 +47,24 @@ func putEditPokemonHandler(s *api.Server) echo.HandlerFunc {
 			return httperrors.NewHTTPError(http.StatusNotFound, "POKEMON_NOT_FOUND", "Pokemon not found in collection")
 		}
 
-		var updateData struct {
-			Caught   *time.Time `json:"caught"`
-			Nickname *string    `json:"nickname"`
-		}
+		var updateData types.PokemonBody
+
 		if err := c.Bind(&updateData); err != nil {
 			log.Debug().Err(err).Msg("Invalid request body")
 			return httperrors.NewHTTPError(http.StatusBadRequest, "INVALID_BODY", "Invalid request body")
 		}
 
-		if updateData.Caught != nil {
-			pokemon.Caught = null.TimeFrom(*updateData.Caught)
+		if updateData.Caught.String() != "" {
+			caughtDate, err := time.Parse("2006-01-02", updateData.Caught.String())
+			if err != nil {
+				log.Debug().Err(err).Msg("Invalid caught date format")
+				return httperrors.NewHTTPError(http.StatusBadRequest, "INVALID_BODY", "Invalid caught date format")
+			}
+			pokemon.Caught = null.TimeFrom(caughtDate)
 		}
-		if updateData.Nickname != nil {
-			pokemon.Nickname = null.StringFrom(*updateData.Nickname)
+
+		if updateData.Nickname != "" {
+			pokemon.Nickname = null.StringFrom(updateData.Nickname)
 		}
 
 		_, err = pokemon.Update(ctx, s.DB, boil.Whitelist("caught", "nickname"))

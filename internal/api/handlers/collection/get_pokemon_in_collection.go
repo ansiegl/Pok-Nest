@@ -11,17 +11,18 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/types/collection"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 	"github.com/labstack/echo/v4"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
 
-func GetPokemonInCollectionRoute(s *api.Server) *echo.Route {
-	return s.Router.APIV1Collection.GET("/pokemon", getPokemonInCollectionHandler(s))
+func GetCollectionPokemonRoute(s *api.Server) *echo.Route {
+	return s.Router.APIV1Collection.GET("/pokemon", getCollectionPokemonHandler(s))
 }
 
-func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
+func getCollectionPokemonHandler(s *api.Server) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
@@ -29,7 +30,7 @@ func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 		user := auth.UserFromContext(ctx)
 
 		// get parameter
-		params := collection.NewGetPokemonInCollectionParams()
+		params := collection.NewGetCollectionPokemonParams()
 		if err := util.BindAndValidatePathAndQueryParams(c, &params); err != nil {
 			return err
 		}
@@ -97,23 +98,31 @@ func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 			return err
 		}
 
-		var pokemonData []*types.Pokemon
+		var pokemonData []*types.CollectionPokemon
 		for _, collectionPokemon := range collectionPokemons {
 			pokemon := collectionPokemon.R.Pokemon
 			if pokemon != nil {
 				pokemonID := strfmt.UUID4(pokemon.PokemonID)
-				pokemonData = append(pokemonData, &types.Pokemon{
-					PokemonID:   &pokemonID,
-					Name:        &pokemon.Name,
-					Type1:       &pokemon.Type1,
-					Type2:       pokemon.Type2.String,
-					Hp:          int64(pokemon.HP),
-					Attack:      int64(pokemon.Attack),
-					Defense:     int64(pokemon.Defense),
-					Speed:       int64(pokemon.Speed),
-					Special:     int64(pokemon.Special),
-					Png:         pokemon.PNGURL,
-					Description: pokemon.Description,
+
+				var nameOrNickname *string
+				if collectionPokemon.Nickname.Valid && collectionPokemon.Nickname.String != "" {
+					nameOrNickname = &collectionPokemon.Nickname.String
+				} else {
+					nameOrNickname = &pokemon.Name
+				}
+
+				pokemonData = append(pokemonData, &types.CollectionPokemon{
+					PokemonID:      &pokemonID,
+					NameOrNickname: nameOrNickname,
+					Type1:          &pokemon.Type1,
+					Type2:          pokemon.Type2.String,
+					Hp:             swag.Int64(int64(pokemon.HP)),
+					Attack:         swag.Int64(int64(pokemon.Attack)),
+					Defense:        swag.Int64(int64(pokemon.Defense)),
+					Speed:          swag.Int64(int64(pokemon.Speed)),
+					Special:        swag.Int64(int64(pokemon.Special)),
+					Png:            &pokemon.PNGURL,
+					Description:    &pokemon.Description,
 				})
 			}
 		}
@@ -121,7 +130,7 @@ func getPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 		tempLimit := int64(limit)
 		tempOffset := int64(offset)
 
-		response := &types.GetPokemonInCollectionResponse{
+		response := &types.GetCollectionPokemonResponse{
 			Data: pokemonData,
 			Pagination: &types.Pagination{
 				Total:  totalCount,

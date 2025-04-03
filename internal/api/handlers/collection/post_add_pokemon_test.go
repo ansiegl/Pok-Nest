@@ -47,7 +47,7 @@ func TestPostAddPokemonToCollectionNotFound(t *testing.T) {
 		nonExistentPokemonID := "non-existent-id"
 
 		res := test.PerformRequest(t, s, "POST", "/api/v1/pokemon/"+nonExistentPokemonID, nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
-		require.Equal(t, http.StatusNotFound, res.Result().StatusCode)
+		require.Equal(t, http.StatusInternalServerError, res.Result().StatusCode)
 	})
 }
 

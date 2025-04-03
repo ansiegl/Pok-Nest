@@ -33,12 +33,12 @@ type PutEditPokemonInCollectionParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*
+	/*nickname and caught date
 	  Required: true
 	  In: body
 	*/
-	Caught *types.Collection
-	/*pokemon's ID to edit
+	Body *types.PokemonBody
+	/*pokemon id to edit
 	  Required: true
 	  In: path
 	*/
@@ -56,12 +56,12 @@ func (o *PutEditPokemonInCollectionParams) BindRequest(r *http.Request, route *m
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.Collection
+		var body types.PokemonBody
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("caught", "body", ""))
+				res = append(res, errors.Required("body", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("caught", "body", "", err))
+				res = append(res, errors.NewParseError("body", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -70,11 +70,11 @@ func (o *PutEditPokemonInCollectionParams) BindRequest(r *http.Request, route *m
 			}
 
 			if len(res) == 0 {
-				o.Caught = &body
+				o.Body = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("caught", "body", ""))
+		res = append(res, errors.Required("body", "body", ""))
 	}
 	rPokemonID, rhkPokemonID, _ := route.Params.GetOK("pokemonId")
 	if err := o.bindPokemonID(rPokemonID, rhkPokemonID, route.Formats); err != nil {
@@ -90,11 +90,11 @@ func (o *PutEditPokemonInCollectionParams) BindRequest(r *http.Request, route *m
 func (o *PutEditPokemonInCollectionParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// caught
+	// body
 	// Required: true
 
 	// body is validated in endpoint
-	//if err := o.Caught.Validate(formats); err != nil {
+	//if err := o.Body.Validate(formats); err != nil {
 	//  res = append(res, err)
 	//}
 

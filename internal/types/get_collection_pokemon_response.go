@@ -12,25 +12,22 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
-// GetPokemonInCollectionResponse get pokemon in collection response
+// GetCollectionPokemonResponse get collection pokemon response
 //
-// swagger:model getPokemonInCollectionResponse
-type GetPokemonInCollectionResponse struct {
+// swagger:model getCollectionPokemonResponse
+type GetCollectionPokemonResponse struct {
 
-	// list of pokemon objects
-	// Required: true
-	Data []*Pokemon `json:"data"`
+	// data
+	Data []*CollectionPokemon `json:"data"`
 
 	// pagination
-	// Required: true
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination,omitempty"`
 }
 
-// Validate validates this get pokemon in collection response
-func (m *GetPokemonInCollectionResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this get collection pokemon response
+func (m *GetCollectionPokemonResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
@@ -47,10 +44,9 @@ func (m *GetPokemonInCollectionResponse) Validate(formats strfmt.Registry) error
 	return nil
 }
 
-func (m *GetPokemonInCollectionResponse) validateData(formats strfmt.Registry) error {
-
-	if err := validate.Required("data", "body", m.Data); err != nil {
-		return err
+func (m *GetCollectionPokemonResponse) validateData(formats strfmt.Registry) error {
+	if swag.IsZero(m.Data) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.Data); i++ {
@@ -74,10 +70,9 @@ func (m *GetPokemonInCollectionResponse) validateData(formats strfmt.Registry) e
 	return nil
 }
 
-func (m *GetPokemonInCollectionResponse) validatePagination(formats strfmt.Registry) error {
-
-	if err := validate.Required("pagination", "body", m.Pagination); err != nil {
-		return err
+func (m *GetCollectionPokemonResponse) validatePagination(formats strfmt.Registry) error {
+	if swag.IsZero(m.Pagination) { // not required
+		return nil
 	}
 
 	if m.Pagination != nil {
@@ -94,8 +89,8 @@ func (m *GetPokemonInCollectionResponse) validatePagination(formats strfmt.Regis
 	return nil
 }
 
-// ContextValidate validate this get pokemon in collection response based on the context it is used
-func (m *GetPokemonInCollectionResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this get collection pokemon response based on the context it is used
+func (m *GetCollectionPokemonResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateData(ctx, formats); err != nil {
@@ -112,7 +107,7 @@ func (m *GetPokemonInCollectionResponse) ContextValidate(ctx context.Context, fo
 	return nil
 }
 
-func (m *GetPokemonInCollectionResponse) contextValidateData(ctx context.Context, formats strfmt.Registry) error {
+func (m *GetCollectionPokemonResponse) contextValidateData(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.Data); i++ {
 
@@ -132,7 +127,7 @@ func (m *GetPokemonInCollectionResponse) contextValidateData(ctx context.Context
 	return nil
 }
 
-func (m *GetPokemonInCollectionResponse) contextValidatePagination(ctx context.Context, formats strfmt.Registry) error {
+func (m *GetCollectionPokemonResponse) contextValidatePagination(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Pagination != nil {
 		if err := m.Pagination.ContextValidate(ctx, formats); err != nil {
@@ -149,7 +144,7 @@ func (m *GetPokemonInCollectionResponse) contextValidatePagination(ctx context.C
 }
 
 // MarshalBinary interface implementation
-func (m *GetPokemonInCollectionResponse) MarshalBinary() ([]byte, error) {
+func (m *GetCollectionPokemonResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -157,8 +152,8 @@ func (m *GetPokemonInCollectionResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *GetPokemonInCollectionResponse) UnmarshalBinary(b []byte) error {
-	var res GetPokemonInCollectionResponse
+func (m *GetCollectionPokemonResponse) UnmarshalBinary(b []byte) error {
+	var res GetCollectionPokemonResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
