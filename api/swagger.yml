@@ -605,6 +605,7 @@ definitions:
     required:
     - pokemon_id
     - name_or_nickname
+    - number
     - type1
     - hp
     - attack
@@ -635,6 +636,10 @@ definitions:
         description: name or nickname of pokemon
         type: string
         example: Bulby
+      number:
+        description: number of pokemon
+        type: integer
+        example: 1
       png:
         description: png URL of pokemon
         type: string
@@ -664,6 +669,7 @@ definitions:
     type: object
     required:
     - pokemon_id
+    - number
     - name_or_nickname
     - caught
     - type1
@@ -706,6 +712,10 @@ definitions:
         description: name or nickname of pokemon
         type: string
         example: Bulby
+      number:
+        description: number of pokemon
+        type: integer
+        example: 1
       png:
         description: png URL of pokemon
         type: string
@@ -1054,6 +1064,10 @@ definitions:
         description: name of pokemon
         type: string
         example: Bulbasaur
+      number:
+        description: number of pokemon
+        type: integer
+        example: 1
       png:
         description: png of pokemon
         type: string

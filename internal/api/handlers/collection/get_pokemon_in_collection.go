@@ -113,6 +113,7 @@ func getCollectionPokemonHandler(s *api.Server) echo.HandlerFunc {
 
 				pokemonData = append(pokemonData, &types.CollectionPokemon{
 					PokemonID:      &pokemonID,
+					Number:         swag.Int64(int64(pokemon.PokemonNumber)),
 					NameOrNickname: nameOrNickname,
 					Type1:          &pokemon.Type1,
 					Type2:          pokemon.Type2.String,

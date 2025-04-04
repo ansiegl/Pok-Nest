@@ -53,6 +53,12 @@ func LoadPokemonFromCSV(csvPath string) ([]models.Pokemon, error) {
 			type2 = null.String{Valid: false}
 		}
 
+		num, err := validateStats(row[0])
+		if err != nil {
+			fmt.Printf("Error in line %d: Invalid 'Pokemon Number' value (%v)\n", lineNumber, row[0])
+			continue
+		}
+
 		hp, err := validateStats(row[4])
 		if err != nil {
 			fmt.Printf("Error in line %d: Invalid 'HP' value (%v)\n", lineNumber, row[4])
@@ -84,17 +90,18 @@ func LoadPokemonFromCSV(csvPath string) ([]models.Pokemon, error) {
 		}
 
 		pokemon := models.Pokemon{
-			Name:        row[1],
-			Type1:       row[2],
-			Type2:       type2,
-			HP:          hp,
-			Attack:      attack,
-			Defense:     defense,
-			Speed:       speed,
-			Special:     special,
-			GifURL:      row[9],
-			PNGURL:      row[10],
-			Description: row[11],
+			PokemonNumber: num,
+			Name:          row[1],
+			Type1:         row[2],
+			Type2:         type2,
+			HP:            hp,
+			Attack:        attack,
+			Defense:       defense,
+			Speed:         speed,
+			Special:       special,
+			GifURL:        row[9],
+			PNGURL:        row[10],
+			Description:   row[11],
 		}
 
 		pokemons = append(pokemons, pokemon)

@@ -22,6 +22,7 @@ CREATE TYPE pokemon_type AS ENUM (
 
 CREATE TABLE pokemon (
     pokemon_id uuid NOT NULL DEFAULT uuid_generate_v4 (),
+    pokemon_number integer NOT NULL,
     "name" text NOT NULL,
     type_1 pokemon_type NOT NULL,
     type_2 pokemon_type,

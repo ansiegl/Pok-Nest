@@ -95,6 +95,7 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 
 			pokemonData = append(pokemonData, &types.Pokemon{
 				PokemonID:   &pokemonID,
+				Number:      int64(p.PokemonNumber),
 				Name:        &p.Name,
 				Type1:       &p.Type1,
 				Type2:       p.Type2.String,

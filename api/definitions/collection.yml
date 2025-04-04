@@ -25,6 +25,7 @@ definitions:
     required:
       - pokemon_id
       - name_or_nickname
+      - number
       - type1
       - hp
       - attack
@@ -43,6 +44,10 @@ definitions:
         type: string
         description: name or nickname of pokemon
         example: Bulby
+      number:
+        type: integer
+        description: number of pokemon
+        example: 1
       type1:
         type: string
         description: first type of pokemon
@@ -83,6 +88,7 @@ definitions:
     type: object
     required:
       - pokemon_id
+      - number
       - name_or_nickname
       - caught
       - type1
@@ -104,6 +110,10 @@ definitions:
         type: string
         description: name or nickname of pokemon
         example: Bulby
+      number:
+        type: integer
+        description: number of pokemon
+        example: 1
       caught:
         type: string
         format: date

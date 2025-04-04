@@ -44,6 +44,11 @@ type CollectionPokemon struct {
 	// Required: true
 	NameOrNickname *string `json:"name_or_nickname"`
 
+	// number of pokemon
+	// Example: 1
+	// Required: true
+	Number *int64 `json:"number"`
+
 	// png URL of pokemon
 	// Example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
 	// Required: true
@@ -96,6 +101,10 @@ func (m *CollectionPokemon) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateNameOrNickname(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNumber(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -164,6 +173,15 @@ func (m *CollectionPokemon) validateHp(formats strfmt.Registry) error {
 func (m *CollectionPokemon) validateNameOrNickname(formats strfmt.Registry) error {
 
 	if err := validate.Required("name_or_nickname", "body", m.NameOrNickname); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CollectionPokemon) validateNumber(formats strfmt.Registry) error {
+
+	if err := validate.Required("number", "body", m.Number); err != nil {
 		return err
 	}
 

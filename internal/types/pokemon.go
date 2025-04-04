@@ -44,6 +44,10 @@ type Pokemon struct {
 	// Required: true
 	Name *string `json:"name"`
 
+	// number of pokemon
+	// Example: 1
+	Number int64 `json:"number,omitempty"`
+
 	// png of pokemon
 	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
 	Png string `json:"png,omitempty"`

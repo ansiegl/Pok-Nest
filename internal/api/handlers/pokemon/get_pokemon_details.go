@@ -46,6 +46,7 @@ func getPokemonDetailsHandler(s *api.Server) echo.HandlerFunc {
 		pokemonID := strfmt.UUID4(pokemon.PokemonID)
 		response := &types.Pokemon{
 			PokemonID:   &pokemonID,
+			Number:      int64(pokemon.PokemonNumber),
 			Name:        &pokemon.Name,
 			Type1:       &pokemon.Type1,
 			Type2:       pokemon.Type2.String,

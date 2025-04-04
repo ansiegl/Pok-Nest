@@ -581,7 +581,7 @@ func testPokemonsSelect(t *testing.T) {
 }
 
 var (
-	pokemonDBTypes = map[string]string{`PokemonID`: `uuid`, `Name`: `text`, `Type1`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Type2`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `HP`: `integer`, `Attack`: `integer`, `Defense`: `integer`, `Speed`: `integer`, `Special`: `integer`, `GifURL`: `text`, `PNGURL`: `text`, `Description`: `text`}
+	pokemonDBTypes = map[string]string{`PokemonID`: `uuid`, `PokemonNumber`: `integer`, `Name`: `text`, `Type1`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `Type2`: `enum.pokemon_type('Fire','Water','Grass','Electric','Psychic','Ghost','Dragon','Fairy','Flying','Dark','Fighting','Bug','Normal','Rock','Ground','Poison','Steel','Ice')`, `HP`: `integer`, `Attack`: `integer`, `Defense`: `integer`, `Speed`: `integer`, `Special`: `integer`, `GifURL`: `text`, `PNGURL`: `text`, `Description`: `text`}
 	_              = bytes.MinRead
 )
 
