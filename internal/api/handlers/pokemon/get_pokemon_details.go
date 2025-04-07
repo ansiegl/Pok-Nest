@@ -55,8 +55,8 @@ func getPokemonDetailsHandler(s *api.Server) echo.HandlerFunc {
 			Defense:     int64(pokemon.Defense),
 			Speed:       int64(pokemon.Speed),
 			Special:     int64(pokemon.Special),
-			Gif:         pokemon.GifURL,
-			Png:         pokemon.PNGURL,
+			GifURL:      pokemon.GifURL,
+			ImageURL:    pokemon.PNGURL,
 			Description: pokemon.Description,
 		}
 

@@ -39,22 +39,22 @@ type CollectionPokemon struct {
 	// Required: true
 	Hp *int64 `json:"hp"`
 
+	// png URL of pokemon
+	// Example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
+	// Required: true
+	ImageURL *string `json:"image_url"`
+
 	// name or nickname of pokemon
 	// Example: Bulby
 	// Required: true
 	NameOrNickname *string `json:"name_or_nickname"`
 
-	// number of pokemon
+	// pokedex number
 	// Example: 1
 	// Required: true
 	Number *int64 `json:"number"`
 
-	// png URL of pokemon
-	// Example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
-	// Required: true
-	Png *string `json:"png"`
-
-	// ID of pokemon
+	// id of pokemon
 	// Example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
 	// Required: true
 	// Format: uuid4
@@ -100,15 +100,15 @@ func (m *CollectionPokemon) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateImageURL(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateNameOrNickname(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateNumber(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePng(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -170,6 +170,15 @@ func (m *CollectionPokemon) validateHp(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *CollectionPokemon) validateImageURL(formats strfmt.Registry) error {
+
+	if err := validate.Required("image_url", "body", m.ImageURL); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *CollectionPokemon) validateNameOrNickname(formats strfmt.Registry) error {
 
 	if err := validate.Required("name_or_nickname", "body", m.NameOrNickname); err != nil {
@@ -182,15 +191,6 @@ func (m *CollectionPokemon) validateNameOrNickname(formats strfmt.Registry) erro
 func (m *CollectionPokemon) validateNumber(formats strfmt.Registry) error {
 
 	if err := validate.Required("number", "body", m.Number); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemon) validatePng(formats strfmt.Registry) error {
-
-	if err := validate.Required("png", "body", m.Png); err != nil {
 		return err
 	}
 

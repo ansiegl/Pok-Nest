@@ -26,6 +26,7 @@ func AttachAllRoutes(s *api.Server) {
 		collection.GetCollectionPokemonDetailRoute(s),
 		collection.GetCollectionPokemonRoute(s),
 		collection.PostAddPokemonToCollectionRoute(s),
+		collection.PostSearchPokemonInCollectionRoute(s),
 		collection.PutEditPokemonRoute(s),
 		common.GetHealthyRoute(s),
 		common.GetReadyRoute(s),
@@ -34,6 +35,7 @@ func AttachAllRoutes(s *api.Server) {
 		pokemon.GetPokemonDetailsRoute(s),
 		pokemon.GetPokemonDownloadRoute(s),
 		pokemon.GetPokemonRoute(s),
+		pokemon.PostSearchPokemonRoute(s),
 		push.GetPushTestRoute(s),
 		push.PostUpdatePushTokenRoute(s),
 	}

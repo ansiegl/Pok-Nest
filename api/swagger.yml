@@ -286,38 +286,9 @@ paths:
       - Bearer: []
       tags:
       - collection
-      summary: get all pokemon in collection or search pokemon by attribute (name,
-        type, etc.)
+      summary: get all pokemon in collection
       operationId: getCollectionPokemon
       parameters:
-      - type: string
-        description: pokemon name to search for
-        name: name
-        in: query
-      - type: string
-        description: pokemon type to search for
-        name: type
-        in: query
-      - type: integer
-        description: pokemon hp to search for
-        name: hp
-        in: query
-      - type: integer
-        description: pokemon attack to search for
-        name: attack
-        in: query
-      - type: integer
-        description: pokemon defense to search for
-        name: defense
-        in: query
-      - type: integer
-        description: pokemon speed to search for
-        name: speed
-        in: query
-      - type: integer
-        description: pokemon special to search for
-        name: special
-        in: query
       - maximum: 20
         type: integer
         default: 10
@@ -330,16 +301,28 @@ paths:
         description: number of pokemon to skip before returning results
         name: offset
         in: query
-      - enum:
-        - asc
-        - desc
-        type: string
-        description: order for the results ("asc" ascending, "desc" descending)
-        name: sortOrder
-        in: query
       responses:
         "200":
-          description: GetCollectionPokemonResponse
+          description: list of pokemon in collection
+          schema:
+            $ref: '#/definitions/getCollectionPokemonResponse'
+        "400":
+          description: invalid parameters
+    post:
+      security:
+      - Bearer: []
+      tags:
+      - collection
+      summary: search for pokemon in collection by filter
+      operationId: searchPokemon
+      parameters:
+      - name: body
+        in: body
+        schema:
+          $ref: '#/definitions/pokemonSearchRequest'
+      responses:
+        "200":
+          description: list of pokemon matching search
           schema:
             $ref: '#/definitions/getCollectionPokemonResponse'
         "400":
@@ -412,42 +395,11 @@ paths:
           description: pokemon or collection not found
   /api/v1/pokemon:
     get:
-      produces:
-      - application/json
       tags:
       - pokemon
-      summary: retrieve all pokemon data as JSON or search pokemon by attribute (name,
-        type, etc.)
-      operationId: getPokemonAsJson
+      summary: get all pokemon
+      operationId: getAllPokemon
       parameters:
-      - type: string
-        description: name of pokemon
-        name: name
-        in: query
-      - type: string
-        description: pokemon type to search for
-        name: type
-        in: query
-      - type: integer
-        description: pokemon hp to search for
-        name: hp
-        in: query
-      - type: integer
-        description: pokemon attack to search for
-        name: attack
-        in: query
-      - type: integer
-        description: pokemon defense to search for
-        name: defense
-        in: query
-      - type: integer
-        description: pokemon speed to search for
-        name: speed
-        in: query
-      - type: integer
-        description: pokemon special to search for
-        name: special
-        in: query
       - maximum: 20
         type: integer
         default: 10
@@ -460,22 +412,30 @@ paths:
         description: number of pokemon to skip before returning results
         name: offset
         in: query
-      - enum:
-        - asc
-        - desc
-        type: string
-        description: order for the results ("asc" ascending, "desc" descending)
-        name: sortOrder
-        in: query
       responses:
         "200":
-          description: GetPokemonResponse
+          description: list of pokemon
           schema:
             $ref: '#/definitions/getPokemonResponse'
         "400":
-          description: invalid query parameters
-        "404":
-          description: pokemon not found
+          description: invalid parameters
+    post:
+      tags:
+      - pokemon
+      summary: search for pokemon in collection by filter
+      operationId: searchPokemonMixin3
+      parameters:
+      - name: body
+        in: body
+        schema:
+          $ref: '#/definitions/pokemonSearchRequest'
+      responses:
+        "200":
+          description: list of pokemon matching search
+          schema:
+            $ref: '#/definitions/getPokemonResponse'
+        "400":
+          description: invalid search parameters
   /api/v1/pokemon/download:
     get:
       produces:
@@ -612,7 +572,7 @@ definitions:
     - defense
     - speed
     - special
-    - png
+    - image_url
     - description
     properties:
       attack:
@@ -632,20 +592,21 @@ definitions:
         description: hp of pokemon
         type: integer
         example: 45
+      image_url:
+        description: png URL of pokemon
+        type: string
+        format: url
+        example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
       name_or_nickname:
         description: name or nickname of pokemon
         type: string
         example: Bulby
       number:
-        description: number of pokemon
+        description: pokedex number
         type: integer
         example: 1
-      png:
-        description: png URL of pokemon
-        type: string
-        example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
       pokemon_id:
-        description: ID of pokemon
+        description: id of pokemon
         type: string
         format: uuid4
         example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
@@ -666,81 +627,23 @@ definitions:
         type: string
         example: Poison
   collectionPokemonDetail:
-    type: object
-    required:
-    - pokemon_id
-    - number
-    - name_or_nickname
-    - caught
-    - type1
-    - hp
-    - attack
-    - defense
-    - speed
-    - special
-    - png
-    - gif
-    - description
-    properties:
-      attack:
-        description: attack of pokemon
-        type: integer
-        example: 49
-      caught:
-        description: date when pokemon was caught
-        type: string
-        format: date
-        example: "2024-03-30"
-      defense:
-        description: defense of pokemon
-        type: integer
-        example: 49
-      description:
-        description: description of pokemon
-        type: string
-        example: A strange seed was planted on its back at birth. The plant sprouts
-          and grows with this Pokémon.
-      gif:
-        description: gif URL of pokemon
-        type: string
-        example: https://play.pokemonshowdown.com/sprites/bwani/bulbasaur.gif
-      hp:
-        description: hp of pokemon
-        type: integer
-        example: 45
-      name_or_nickname:
-        description: name or nickname of pokemon
-        type: string
-        example: Bulby
-      number:
-        description: number of pokemon
-        type: integer
-        example: 1
-      png:
-        description: png URL of pokemon
-        type: string
-        example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
-      pokemon_id:
-        description: ID of pokemon
-        type: string
-        format: uuid4
-        example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
-      special:
-        description: special stat of pokemon
-        type: integer
-        example: 65
-      speed:
-        description: speed of pokemon
-        type: integer
-        example: 45
-      type1:
-        description: first type of pokemon
-        type: string
-        example: Grass
-      type2:
-        description: second type of pokemon
-        type: string
-        example: Poison
+    allOf:
+    - $ref: '#/definitions/collectionPokemon'
+    - type: object
+      required:
+      - caught
+      - gif
+      properties:
+        caught:
+          description: date when pokemon was caught
+          type: string
+          format: date
+          example: "2024-03-30"
+        gif_url:
+          description: gif URL of pokemon
+          type: string
+          format: url
+          example: https://play.pokemonshowdown.com/sprites/bwani/bulbasaur.gif
   getCollectionPokemonDetailResponse:
     type: object
     properties:
@@ -1052,14 +955,20 @@ definitions:
         type: string
         example: A strange seed was planted on its back at birth. The plant sprouts
           and grows with this Pokemon.
-      gif:
+      gif_url:
         description: gif of pokemon
         type: string
+        format: url
         example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
       hp:
         description: hp of pokemon
         type: integer
         example: 45
+      image_url:
+        description: png of pokemon
+        type: string
+        format: url
+        example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
       name:
         description: name of pokemon
         type: string
@@ -1068,10 +977,6 @@ definitions:
         description: number of pokemon
         type: integer
         example: 1
-      png:
-        description: png of pokemon
-        type: string
-        example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
       pokemon_id:
         description: ID of the pokemon
         type: string
@@ -1097,14 +1002,54 @@ definitions:
     type: object
     properties:
       caught:
-        description: date when pokemon was caught
+        description: Optional date when the Pokémon was caught
         type: string
         format: date
         example: "2024-03-30"
       nickname:
-        description: name or nickname of pokemon
+        description: Optional nickname for the Pokémon
         type: string
         example: Bulby
+  pokemonSearchRequest:
+    type: object
+    properties:
+      attack:
+        description: filter by attack
+        type: integer
+        example: 60
+      defense:
+        description: filter by defense
+        type: integer
+        example: 40
+      hp:
+        description: filter by hp
+        type: integer
+        example: 50
+      name:
+        description: filter by pokemon name
+        type: string
+        example: Bulbasaur
+      pagination:
+        $ref: '#/definitions/pagination'
+      sortOrder:
+        description: sort order for results
+        type: string
+        enum:
+        - asc
+        - desc
+        example: asc
+      special:
+        description: filter by special stat
+        type: integer
+        example: 65
+      speed:
+        description: filter by speed
+        type: integer
+        example: 45
+      type:
+        description: filter by type
+        type: string
+        example: Grass
   postChangePasswordPayload:
     type: object
     required:

@@ -8,15 +8,15 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/ansiegl/Pok-Nest.git/internal/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetPokemon(t *testing.T) {
+func TestPostSearchPokemon(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 
-		// test GET all pokemon with default pagination
-		res := test.PerformRequest(t, s, "GET", "/api/v1/pokemon", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		res := test.PerformRequest(t, s, "POST", "/api/v1/pokemon", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
 		require.Equal(t, http.StatusOK, res.Result().StatusCode)
 
 		// parse response body
@@ -47,5 +47,41 @@ func TestGetPokemon(t *testing.T) {
 		// check that only 3 pokemon were returned
 		require.Len(t, limitResponse.Data, 3)
 		require.Equal(t, int64(3), limitResponse.Pagination.Limit)
+	})
+}
+
+func TestPostSearchPokemonWithBody(t *testing.T) {
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		// Test-Filter
+		searchRequest := map[string]interface{}{
+			"name": "Bulbasaur",
+			"type": "Grass",
+			"hp":   45,
+			"pagination": map[string]interface{}{
+				"limit":  10,
+				"offset": 0,
+			},
+		}
+
+		res := test.PerformRequest(t, s, "POST", "/api/v1/pokemon", searchRequest, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		require.Equal(t, http.StatusOK, res.Result().StatusCode)
+
+		// check pokemon in response
+		var response types.GetPokemonResponse
+		err := json.NewDecoder(res.Result().Body).Decode(&response)
+		require.NoError(t, err)
+
+		// Überprüfen, dass das Pokémon in der Antwort enthalten ist
+		assert.Len(t, response.Data, 1, "Expected one pokemon in the response")
+		assert.Equal(t, "Bulbasaur", *response.Data[0].Name, "Name of pokemon should match")
+		assert.Equal(t, "Grass", *response.Data[0].Type1, "Type of pokemon should match")
+		assert.Equal(t, 45, int(response.Data[0].Hp), "HP of pokemon should match")
+
+		// check pagination
+		assert.Equal(t, 1, int(response.Pagination.Total), "Total should be 1")
+		assert.Equal(t, 10, int(response.Pagination.Limit), "Limit should be 10")
+		assert.Equal(t, 0, int(response.Pagination.Offset), "Offset should be 0")
 	})
 }

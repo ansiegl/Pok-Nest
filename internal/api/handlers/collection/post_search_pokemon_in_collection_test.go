@@ -1,4 +1,4 @@
-package pokemon_test
+package collection_test
 
 import (
 	"encoding/json"
@@ -8,15 +8,15 @@ import (
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/test"
 	"github.com/ansiegl/Pok-Nest.git/internal/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetPokemon(t *testing.T) {
+func TestPostSearchPokemonInCollectio(t *testing.T) {
 	test.WithTestServer(t, func(s *api.Server) {
 		fixtures := test.Fixtures()
 
-		// test GET all pokemon with default pagination
-		res := test.PerformRequest(t, s, "GET", "/api/v1/pokemon", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		res := test.PerformRequest(t, s, "POST", "/api/v1/collection/pokemon", nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
 		require.Equal(t, http.StatusOK, res.Result().StatusCode)
 
 		// parse response body
@@ -47,5 +47,37 @@ func TestGetPokemon(t *testing.T) {
 		// check that only 3 pokemon were returned
 		require.Len(t, limitResponse.Data, 3)
 		require.Equal(t, int64(3), limitResponse.Pagination.Limit)
+	})
+}
+
+func TestPostSearchPokemonInCollectionWithBody(t *testing.T) {
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		// filter
+		searchRequest := map[string]interface{}{
+			"type": fixtures.PokemonInCollection1.Type1,
+			"hp":   fixtures.PokemonInCollection1.HP,
+			"pagination": map[string]interface{}{
+				"limit":  2,
+				"offset": 0,
+			},
+		}
+
+		res := test.PerformRequest(t, s, "POST", "/api/v1/collection/pokemon", searchRequest, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		require.Equal(t, http.StatusOK, res.Result().StatusCode)
+
+		// check pokemon in response
+		var response types.GetPokemonResponse
+		err := json.NewDecoder(res.Result().Body).Decode(&response)
+		require.NoError(t, err)
+
+		// check pokemon responses
+		assert.Equal(t, fixtures.PokemonInCollection1.Type1, *response.Data[0].Type1, "Types doesn't match")
+		assert.Equal(t, fixtures.PokemonInCollection1.HP, int(response.Data[0].Hp), "HP doesn#t match")
+
+		// check pagination
+		assert.Equal(t, 2, int(response.Pagination.Limit), "Limit should be 2")
+		assert.Equal(t, 0, int(response.Pagination.Offset), "Offset should be 0")
 	})
 }

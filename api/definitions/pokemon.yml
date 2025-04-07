@@ -52,12 +52,14 @@ definitions:
         type: integer
         description: special of pokemon
         example: 65
-      gif:
+      gif_url:
         type: string
+        format: url
         description: gif of pokemon
         example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
-      png:
+      image_url:
         type: string
+        format: url
         description: png of pokemon
         example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
       description:
@@ -103,3 +105,41 @@ definitions:
           type: integer
           description: HTTP status code of the operation
           example: 200
+  PokemonSearchRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: filter by pokemon name
+        example: Bulbasaur
+      type:
+        type: string
+        description: filter by type
+        example: Grass
+      hp:
+        type: integer
+        description: filter by hp
+        example: 50
+      attack:
+        type: integer
+        description: filter by attack
+        example: 60
+      defense:
+        type: integer
+        description: filter by defense
+        example: 40
+      speed:
+        type: integer
+        description: filter by speed
+        example: 45
+      special:
+        type: integer
+        description: filter by special stat
+        example: 65
+      sortOrder:
+        type: string
+        enum: [asc, desc]
+        description: sort order for results
+        example: asc
+      pagination:
+        $ref: "#/definitions/Pagination"

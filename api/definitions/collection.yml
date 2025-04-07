@@ -5,21 +5,21 @@ info:
 paths: {}
 definitions:
   Collection:
-    type: object
-    required:
-      - pokemon
-    properties:
-      name_or_nickname:
-        type: string
-        description: name or nickname of pokemon
-        example: Bulby
-      caught:
-        type: string
-        format: date
-        description: date when pokemon was caught
-        example: "2024-03-30"
-      pokemon:
-        $ref: './pokemon.yml#/definitions/Pokemon'
+      type: object
+      required:
+        - pokemon
+      properties:
+        name_or_nickname:
+          type: string
+          description: name or nickname of pokemon
+          example: Bulby
+        caught:
+          type: string
+          format: date
+          description: date when pokemon was caught
+          example: "2024-03-30"
+        pokemon:
+          $ref: './pokemon.yml#/definitions/Pokemon'
   CollectionPokemon:
     type: object
     required:
@@ -32,13 +32,13 @@ definitions:
       - defense
       - speed
       - special
-      - png
+      - image_url
       - description
     properties:
       pokemon_id:
         type: string
         format: uuid4
-        description: ID of pokemon
+        description: id of pokemon
         example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
       name_or_nickname:
         type: string
@@ -46,7 +46,7 @@ definitions:
         example: Bulby
       number:
         type: integer
-        description: number of pokemon
+        description: pokedex number
         example: 1
       type1:
         type: string
@@ -76,8 +76,9 @@ definitions:
         type: integer
         description: special stat of pokemon
         example: 65
-      png:
+      image_url:
         type: string
+        format: url
         description: png URL of pokemon
         example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
       description:
@@ -85,80 +86,23 @@ definitions:
         description: description of pokemon
         example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.
   CollectionPokemonDetail:
-    type: object
-    required:
-      - pokemon_id
-      - number
-      - name_or_nickname
-      - caught
-      - type1
-      - hp
-      - attack
-      - defense
-      - speed
-      - special
-      - png
-      - gif
-      - description
-    properties:
-      pokemon_id:
-        type: string
-        format: uuid4
-        description: ID of pokemon
-        example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
-      name_or_nickname:
-        type: string
-        description: name or nickname of pokemon
-        example: Bulby
-      number:
-        type: integer
-        description: number of pokemon
-        example: 1
-      caught:
-        type: string
-        format: date
-        description: date when pokemon was caught
-        example: "2024-03-30"      
-      type1:
-        type: string
-        description: first type of pokemon
-        example: Grass
-      type2:
-        type: string
-        description: second type of pokemon
-        example: Poison
-      hp:
-        type: integer
-        description: hp of pokemon
-        example: 45
-      attack:
-        type: integer
-        description: attack of pokemon
-        example: 49
-      defense:
-        type: integer
-        description: defense of pokemon
-        example: 49
-      speed:
-        type: integer
-        description: speed of pokemon
-        example: 45
-      special:
-        type: integer
-        description: special stat of pokemon
-        example: 65
-      png:
-        type: string
-        description: png URL of pokemon
-        example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
-      gif:
-        type: string
-        description: gif URL of pokemon
-        example: https://play.pokemonshowdown.com/sprites/bwani/bulbasaur.gif
-      description:
-        type: string
-        description: description of pokemon
-        example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.
+    allOf:
+      - $ref: "#/definitions/CollectionPokemon"
+      - type: object
+        required:
+          - caught
+          - gif
+        properties:
+          caught:
+            type: string
+            format: date
+            description: date when pokemon was caught
+            example: "2024-03-30"
+          gif_url:
+            type: string
+            format: url
+            description: gif URL of pokemon
+            example: https://play.pokemonshowdown.com/sprites/bwani/bulbasaur.gif
   GetCollectionPokemonResponse:
     type: object
     properties:
@@ -178,10 +122,10 @@ definitions:
     properties:
       nickname:
         type: string
-        description: name or nickname of pokemon
+        description: Optional nickname for the Pokémon
         example: Bulby
       caught:
         type: string
         format: date
-        description: date when pokemon was caught
+        description: Optional date when the Pokémon was caught
         example: "2024-03-30"

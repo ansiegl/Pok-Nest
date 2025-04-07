@@ -58,44 +58,9 @@ paths:
         - Bearer: []
       tags:
         - collection
-      summary: get all pokemon in collection or search pokemon by attribute (name, type, etc.)
+      summary: get all pokemon in collection
       operationId: getCollectionPokemon
       parameters:
-        - name: name
-          in: query
-          required: false
-          type: string
-          description: pokemon name to search for
-        - name: type
-          in: query
-          required: false
-          type: string
-          description: pokemon type to search for
-        - name: hp
-          in: query
-          required: false
-          type: integer
-          description: pokemon hp to search for
-        - name: attack
-          in: query
-          required: false
-          type: integer
-          description: pokemon attack to search for
-        - name: defense
-          in: query
-          required: false
-          type: integer
-          description: pokemon defense to search for
-        - name: speed
-          in: query
-          required: false
-          type: integer
-          description: pokemon speed to search for
-        - name: special
-          in: query
-          required: false
-          type: integer
-          description: pokemon special to search for
         - name: limit
           in: query
           required: false
@@ -110,19 +75,33 @@ paths:
           description: number of pokemon to skip before returning results
           default: 0
           minimum: 0
-        - name: sortOrder
-          in: query
-          required: false
-          type: string
-          enum: [asc, desc]
-          description: order for the results ("asc" ascending, "desc" descending)
       responses:
-          "200":
-            description: GetCollectionPokemonResponse
-            schema:
-              $ref: "../definitions/collection.yml#/definitions/GetCollectionPokemonResponse"
-          "400":
-            description: invalid search parameters
+        "200":
+          description: list of pokemon in collection
+          schema:
+            $ref: "../definitions/collection.yml#/definitions/GetCollectionPokemonResponse"
+        "400":
+          description: invalid parameters
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - collection
+      summary: search for pokemon in collection by filter
+      operationId: searchPokemon
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: "../definitions/pokemon.yml#/definitions/PokemonSearchRequest"
+      responses:
+        "200":
+          description: list of pokemon matching search
+          schema:
+            $ref: "../definitions/collection.yml#/definitions/GetCollectionPokemonResponse"
+        "400":
+          description: invalid search parameters
   /api/v1/collection/pokemon/{pokemonId}:
     get:
       security:
@@ -189,6 +168,3 @@ paths:
           description: invalid input data
         "404":
           description: pokemon or collection not found
-
-
-  

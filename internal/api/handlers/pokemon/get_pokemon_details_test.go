@@ -28,7 +28,7 @@ func TestGetPokemonDetails(t *testing.T) {
 		require.Equal(t, pokemonID, string(*response.PokemonID))
 		require.Equal(t, fixtures.PokemonInCollection1.Name, *response.Name)
 		require.Equal(t, fixtures.PokemonInCollection1.Type1, *response.Type1)
-		require.Equal(t, fixtures.PokemonInCollection1.PNGURL, response.Png)
+		require.Equal(t, fixtures.PokemonInCollection1.PNGURL, response.ImageURL)
 
 		// test invalid Pokemon ID
 		invalidID := "00000000-0000-0000-0000-000000000000"

@@ -33,11 +33,15 @@ type Pokemon struct {
 
 	// gif of pokemon
 	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
-	Gif string `json:"gif,omitempty"`
+	GifURL string `json:"gif_url,omitempty"`
 
 	// hp of pokemon
 	// Example: 45
 	Hp int64 `json:"hp,omitempty"`
+
+	// png of pokemon
+	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+	ImageURL string `json:"image_url,omitempty"`
 
 	// name of pokemon
 	// Example: Bulbasaur
@@ -47,10 +51,6 @@ type Pokemon struct {
 	// number of pokemon
 	// Example: 1
 	Number int64 `json:"number,omitempty"`
-
-	// png of pokemon
-	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
-	Png string `json:"png,omitempty"`
 
 	// ID of the pokemon
 	// Example: 891d37d3-c74f-493e-aea8-af73efd92016

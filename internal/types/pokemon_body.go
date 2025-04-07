@@ -19,12 +19,12 @@ import (
 // swagger:model pokemonBody
 type PokemonBody struct {
 
-	// date when pokemon was caught
+	// Optional date when the Pokémon was caught
 	// Example: 2024-03-30
 	// Format: date
 	Caught strfmt.Date `json:"caught,omitempty"`
 
-	// name or nickname of pokemon
+	// Optional nickname for the Pokémon
 	// Example: Bulby
 	Nickname string `json:"nickname,omitempty"`
 }

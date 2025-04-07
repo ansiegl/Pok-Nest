@@ -2,7 +2,6 @@ package pokemon
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
@@ -12,8 +11,6 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/labstack/echo/v4"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 func GetPokemonRoute(s *api.Server) *echo.Route {
@@ -25,46 +22,13 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 		ctx := c.Request().Context()
 		log := util.LogFromContext(ctx)
 
-		params := pokemon.NewGetPokemonAsJSONParams()
+		params := pokemon.NewGetAllPokemonParams()
 		err := util.BindAndValidatePathAndQueryParams(c, &params)
 		if err != nil {
 			return err
 		}
 
 		queryMods := []qm.QueryMod{}
-
-		if params.Name != nil {
-			nameFormatted := cases.Title(language.English).String(strings.ToLower(*params.Name))
-			queryMods = append(queryMods, qm.Where("name = ?", nameFormatted))
-		}
-		if params.Type != nil {
-			typeFormatted := cases.Title(language.English).String(strings.ToLower(*params.Type))
-			queryMods = append(queryMods, qm.Where("type_1 = ? OR type_2 = ?", typeFormatted, typeFormatted))
-		}
-		if params.Hp != nil {
-			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
-		}
-		if params.Attack != nil {
-			queryMods = append(queryMods, qm.Where("attack = ?", params.Attack))
-		}
-		if params.Hp != nil {
-			queryMods = append(queryMods, qm.Where("hp = ?", params.Hp))
-		}
-		if params.Defense != nil {
-			queryMods = append(queryMods, qm.Where("defense = ?", params.Defense))
-		}
-		if params.Speed != nil {
-			queryMods = append(queryMods, qm.Where("speed = ?", params.Speed))
-		}
-		if params.Special != nil {
-			queryMods = append(queryMods, qm.Where("special = ?", params.Special))
-		}
-
-		sortOrder := "asc"
-		if params.SortOrder != nil {
-			sortOrder = *params.SortOrder
-		}
-		queryMods = append(queryMods, qm.OrderBy("name "+sortOrder))
 
 		limit := 10
 		if params.Limit != nil {
@@ -104,7 +68,7 @@ func getPokemonHandler(s *api.Server) echo.HandlerFunc {
 				Defense:     int64(p.Defense),
 				Speed:       int64(p.Speed),
 				Special:     int64(p.Special),
-				Png:         p.PNGURL,
+				ImageURL:    p.PNGURL,
 				Description: p.Description,
 			})
 		}

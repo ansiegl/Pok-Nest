@@ -18,11 +18,7 @@ import (
 //
 // swagger:model collectionPokemonDetail
 type CollectionPokemonDetail struct {
-
-	// attack of pokemon
-	// Example: 49
-	// Required: true
-	Attack *int64 `json:"attack"`
+	CollectionPokemon
 
 	// date when pokemon was caught
 	// Example: 2024-03-30
@@ -30,72 +26,70 @@ type CollectionPokemonDetail struct {
 	// Format: date
 	Caught *strfmt.Date `json:"caught"`
 
-	// defense of pokemon
-	// Example: 49
-	// Required: true
-	Defense *int64 `json:"defense"`
-
-	// description of pokemon
-	// Example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.
-	// Required: true
-	Description *string `json:"description"`
-
 	// gif URL of pokemon
 	// Example: https://play.pokemonshowdown.com/sprites/bwani/bulbasaur.gif
-	// Required: true
-	Gif *string `json:"gif"`
+	GifURL string `json:"gif_url,omitempty"`
+}
 
-	// hp of pokemon
-	// Example: 45
-	// Required: true
-	Hp *int64 `json:"hp"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *CollectionPokemonDetail) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 CollectionPokemon
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.CollectionPokemon = aO0
 
-	// name or nickname of pokemon
-	// Example: Bulby
-	// Required: true
-	NameOrNickname *string `json:"name_or_nickname"`
+	// AO1
+	var dataAO1 struct {
+		Caught *strfmt.Date `json:"caught"`
 
-	// number of pokemon
-	// Example: 1
-	// Required: true
-	Number *int64 `json:"number"`
+		GifURL string `json:"gif_url,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
 
-	// png URL of pokemon
-	// Example: https://play.pokemonshowdown.com/sprites/bw/bulbasaur.png
-	// Required: true
-	Png *string `json:"png"`
+	m.Caught = dataAO1.Caught
 
-	// ID of pokemon
-	// Example: ded12a71-9fc3-430f-8259-a6779f1a7f0c
-	// Required: true
-	// Format: uuid4
-	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
+	m.GifURL = dataAO1.GifURL
 
-	// special stat of pokemon
-	// Example: 65
-	// Required: true
-	Special *int64 `json:"special"`
+	return nil
+}
 
-	// speed of pokemon
-	// Example: 45
-	// Required: true
-	Speed *int64 `json:"speed"`
+// MarshalJSON marshals this object to a JSON structure
+func (m CollectionPokemonDetail) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
 
-	// first type of pokemon
-	// Example: Grass
-	// Required: true
-	Type1 *string `json:"type1"`
+	aO0, err := swag.WriteJSON(m.CollectionPokemon)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		Caught *strfmt.Date `json:"caught"`
 
-	// second type of pokemon
-	// Example: Poison
-	Type2 string `json:"type2,omitempty"`
+		GifURL string `json:"gif_url,omitempty"`
+	}
+
+	dataAO1.Caught = m.Caught
+
+	dataAO1.GifURL = m.GifURL
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this collection pokemon detail
 func (m *CollectionPokemonDetail) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateAttack(formats); err != nil {
+	// validation for a type composition with CollectionPokemon
+	if err := m.CollectionPokemon.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -103,62 +97,9 @@ func (m *CollectionPokemonDetail) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateDefense(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateDescription(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateGif(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHp(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateNameOrNickname(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateNumber(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePng(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePokemonID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpecial(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpeed(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateType1(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateAttack(formats strfmt.Registry) error {
-
-	if err := validate.Required("attack", "body", m.Attack); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -175,111 +116,18 @@ func (m *CollectionPokemonDetail) validateCaught(formats strfmt.Registry) error 
 	return nil
 }
 
-func (m *CollectionPokemonDetail) validateDefense(formats strfmt.Registry) error {
-
-	if err := validate.Required("defense", "body", m.Defense); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateDescription(formats strfmt.Registry) error {
-
-	if err := validate.Required("description", "body", m.Description); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateGif(formats strfmt.Registry) error {
-
-	if err := validate.Required("gif", "body", m.Gif); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateHp(formats strfmt.Registry) error {
-
-	if err := validate.Required("hp", "body", m.Hp); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateNameOrNickname(formats strfmt.Registry) error {
-
-	if err := validate.Required("name_or_nickname", "body", m.NameOrNickname); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateNumber(formats strfmt.Registry) error {
-
-	if err := validate.Required("number", "body", m.Number); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validatePng(formats strfmt.Registry) error {
-
-	if err := validate.Required("png", "body", m.Png); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validatePokemonID(formats strfmt.Registry) error {
-
-	if err := validate.Required("pokemon_id", "body", m.PokemonID); err != nil {
-		return err
-	}
-
-	if err := validate.FormatOf("pokemon_id", "body", "uuid4", m.PokemonID.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateSpecial(formats strfmt.Registry) error {
-
-	if err := validate.Required("special", "body", m.Special); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateSpeed(formats strfmt.Registry) error {
-
-	if err := validate.Required("speed", "body", m.Speed); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CollectionPokemonDetail) validateType1(formats strfmt.Registry) error {
-
-	if err := validate.Required("type1", "body", m.Type1); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this collection pokemon detail based on context it is used
+// ContextValidate validate this collection pokemon detail based on the context it is used
 func (m *CollectionPokemonDetail) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with CollectionPokemon
+	if err := m.CollectionPokemon.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
