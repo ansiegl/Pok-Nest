@@ -7,6 +7,7 @@ import (
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/api/auth"
+	"github.com/ansiegl/Pok-Nest.git/internal/api/httperrors"
 	"github.com/ansiegl/Pok-Nest.git/internal/models"
 	"github.com/ansiegl/Pok-Nest.git/internal/types"
 	"github.com/ansiegl/Pok-Nest.git/internal/types/collection"
@@ -36,7 +37,7 @@ func postSearchPokemonInCollectionHandler(s *api.Server) echo.HandlerFunc {
 		var searchRequest types.PokemonSearchRequest
 		if err := c.Bind(&searchRequest); err != nil {
 			log.Err(err).Msg("Failed to bind request body")
-			return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
+			return httperrors.NewHTTPError(http.StatusBadRequest, "INVALID_BODY", "Invalid request body")
 		}
 
 		queryMods := []qm.QueryMod{

@@ -68,10 +68,8 @@ func getCollectionPokemonHandler(s *api.Server) echo.HandlerFunc {
 			if pokemon != nil {
 				pokemonID := strfmt.UUID4(pokemon.PokemonID)
 
-				var nameOrNickname *string
-				if collectionPokemon.Nickname.Valid && collectionPokemon.Nickname.String != "" {
-					nameOrNickname = &collectionPokemon.Nickname.String
-				} else {
+				nameOrNickname := util.NonEmptyOrNil(collectionPokemon.Nickname.String)
+				if nameOrNickname == nil {
 					nameOrNickname = &pokemon.Name
 				}
 

@@ -36,7 +36,7 @@ func deletePokemonHandler(s *api.Server) echo.HandlerFunc {
 		).Exists(ctx, s.DB)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to check if pokemon exists in collection")
-			return httperrors.NewHTTPError(http.StatusInternalServerError, "SERVER_ERROR", "Database error")
+			return err
 		}
 
 		if !exists {
@@ -50,7 +50,7 @@ func deletePokemonHandler(s *api.Server) echo.HandlerFunc {
 		).DeleteAll(ctx, s.DB)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to delete pokemon from collection")
-			return httperrors.NewHTTPError(http.StatusInternalServerError, "SERVER_ERROR", "Could not delete pokemon")
+			return err
 		}
 
 		log.Info().Str("pokemonID", params.PokemonID).Str("userID", user.ID).Msg("Pokemon successfully deleted from collection")

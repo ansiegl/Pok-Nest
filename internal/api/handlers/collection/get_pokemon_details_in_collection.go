@@ -63,10 +63,8 @@ func getCollectionPokemonDetailHandler(s *api.Server) echo.HandlerFunc {
 			caughtDate = strfmt.Date(collectionPokemon.Caught.Time)
 		}
 
-		var nameOrNickname *string
-		if collectionPokemon.Nickname.Valid && collectionPokemon.Nickname.String != "" {
-			nameOrNickname = &collectionPokemon.Nickname.String
-		} else {
+		nameOrNickname := util.NonEmptyOrNil(collectionPokemon.Nickname.String)
+		if nameOrNickname == nil {
 			nameOrNickname = &pokemon.Name
 		}
 
