@@ -59,10 +59,6 @@ func TestPostSearchPokemonWithBody(t *testing.T) {
 			"name": "Bulbasaur",
 			"type": "Grass",
 			"hp":   45,
-			"pagination": map[string]interface{}{
-				"limit":  10,
-				"offset": 0,
-			},
 		}
 
 		res := test.PerformRequest(t, s, "POST", "/api/v1/pokemon", searchRequest, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))

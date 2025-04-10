@@ -28,18 +28,24 @@ func getCollectionPokemonDetailHandler(s *api.Server) echo.HandlerFunc {
 		user := auth.UserFromContext(ctx)
 
 		params := collection.NewGetCollectionPokemonDetailParams()
-		err := util.BindAndValidatePathAndQueryParams(c, &params)
-		if err != nil {
+		if err := util.BindAndValidatePathAndQueryParams(c, &params); err != nil {
 			return err
 		}
 
 		queryMods := []qm.QueryMod{
 			models.CollectionPokemonWhere.UserID.EQ(user.ID),
-			qm.InnerJoin("pokemon ON pokemon.pokemon_id = collection_pokemon.pokemon_id"),
-			qm.Load("Pokemon"),
-		}
+			models.CollectionPokemonWhere.PokemonID.EQ(params.PokemonID),
 
-		queryMods = append(queryMods, qm.Where("pokemon.pokemon_id = ?", params.PokemonID))
+			qm.InnerJoin(
+				fmt.Sprintf(
+					"%s ON %s = %s",
+					models.TableNames.Pokemon,
+					models.PokemonTableColumns.PokemonID,
+					models.CollectionPokemonTableColumns.PokemonID,
+				),
+			),
+			qm.Load(qm.Rels(models.CollectionPokemonRels.Pokemon)),
+		}
 
 		collectionPokemon, err := models.CollectionPokemons(queryMods...).One(ctx, s.DB)
 		if err != nil {
@@ -55,8 +61,6 @@ func getCollectionPokemonDetailHandler(s *api.Server) echo.HandlerFunc {
 		var caughtDate strfmt.Date
 		if collectionPokemon.Caught.Valid {
 			caughtDate = strfmt.Date(collectionPokemon.Caught.Time)
-		} else {
-			caughtDate = strfmt.Date{}
 		}
 
 		var nameOrNickname *string

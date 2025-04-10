@@ -88,8 +88,22 @@ paths:
       tags:
         - collection
       summary: search for pokemon in collection by filter
-      operationId: searchPokemon
+      operationId: postSearchPokemonInCollection
       parameters:
+        - name: limit
+          in: query
+          required: false
+          type: integer
+          description: number of pokemon to return per page
+          default: 10
+          maximum: 20
+        - name: offset
+          in: query
+          required: false
+          type: integer
+          description: number of pokemon to skip before returning results
+          default: 0
+          minimum: 0
         - in: body
           name: body
           required: false

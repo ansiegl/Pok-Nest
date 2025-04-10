@@ -36,3 +36,23 @@ func TestDeletePokemon(t *testing.T) {
 		require.False(t, existsAfter, "Pokemon sollte nach dem Löschen nicht mehr in der Sammlung existieren")
 	})
 }
+
+func TestDeletePokemonNotFound(t *testing.T) {
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		// delete pokemon that does not exist in collection
+		res := test.PerformRequest(t, s, "DELETE", "/api/v1/collection/pokemon/"+fixtures.PokemonNotInCollection.PokemonID, nil, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
+		require.Equal(t, http.StatusNotFound, res.Result().StatusCode, "Expected 404 Not Found when deleting a non-existent pokemon")
+	})
+}
+
+func TestDeletePokemonUnauthenticated(t *testing.T) {
+	test.WithTestServer(t, func(s *api.Server) {
+		fixtures := test.Fixtures()
+
+		// attempt to delete pokemon without authentication
+		res := test.PerformRequest(t, s, "DELETE", "/api/v1/collection/pokemon/"+fixtures.PokemonInCollection1.PokemonID, nil, nil)
+		require.Equal(t, http.StatusUnauthorized, res.Result().StatusCode, "Expected 401 Unauthorized when not authenticated")
+	})
+}

@@ -58,10 +58,6 @@ func TestPostSearchPokemonInCollectionWithBody(t *testing.T) {
 		searchRequest := map[string]interface{}{
 			"type": fixtures.PokemonInCollection1.Type1,
 			"hp":   fixtures.PokemonInCollection1.HP,
-			"pagination": map[string]interface{}{
-				"limit":  2,
-				"offset": 0,
-			},
 		}
 
 		res := test.PerformRequest(t, s, "POST", "/api/v1/collection/pokemon", searchRequest, test.HeadersWithAuth(t, fixtures.User1AccessToken1.Token))
@@ -74,10 +70,6 @@ func TestPostSearchPokemonInCollectionWithBody(t *testing.T) {
 
 		// check pokemon responses
 		assert.Equal(t, fixtures.PokemonInCollection1.Type1, *response.Data[0].Type1, "Types doesn't match")
-		assert.Equal(t, fixtures.PokemonInCollection1.HP, int(response.Data[0].Hp), "HP doesn#t match")
-
-		// check pagination
-		assert.Equal(t, 2, int(response.Pagination.Limit), "Limit should be 2")
-		assert.Equal(t, 0, int(response.Pagination.Offset), "Offset should be 0")
+		assert.Equal(t, fixtures.PokemonInCollection1.HP, int(response.Data[0].Hp), "HP doesn't match")
 	})
 }

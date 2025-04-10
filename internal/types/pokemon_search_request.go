@@ -22,22 +22,22 @@ type PokemonSearchRequest struct {
 
 	// filter by attack
 	// Example: 60
-	Attack int64 `json:"attack,omitempty"`
+	// Minimum: 0
+	Attack *int64 `json:"attack,omitempty"`
 
 	// filter by defense
 	// Example: 40
-	Defense int64 `json:"defense,omitempty"`
+	// Minimum: 0
+	Defense *int64 `json:"defense,omitempty"`
 
 	// filter by hp
 	// Example: 50
-	Hp int64 `json:"hp,omitempty"`
+	// Minimum: 0
+	Hp *int64 `json:"hp,omitempty"`
 
 	// filter by pokemon name
 	// Example: Bulbasaur
 	Name string `json:"name,omitempty"`
-
-	// pagination
-	Pagination *Pagination `json:"pagination,omitempty"`
 
 	// sort order for results
 	// Example: asc
@@ -46,11 +46,13 @@ type PokemonSearchRequest struct {
 
 	// filter by special stat
 	// Example: 65
-	Special int64 `json:"special,omitempty"`
+	// Minimum: 0
+	Special *int64 `json:"special,omitempty"`
 
 	// filter by speed
 	// Example: 45
-	Speed int64 `json:"speed,omitempty"`
+	// Minimum: 0
+	Speed *int64 `json:"speed,omitempty"`
 
 	// filter by type
 	// Example: Grass
@@ -61,11 +63,27 @@ type PokemonSearchRequest struct {
 func (m *PokemonSearchRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validatePagination(formats); err != nil {
+	if err := m.validateAttack(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDefense(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHp(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateSortOrder(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpecial(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpeed(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -75,20 +93,37 @@ func (m *PokemonSearchRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PokemonSearchRequest) validatePagination(formats strfmt.Registry) error {
-	if swag.IsZero(m.Pagination) { // not required
+func (m *PokemonSearchRequest) validateAttack(formats strfmt.Registry) error {
+	if swag.IsZero(m.Attack) { // not required
 		return nil
 	}
 
-	if m.Pagination != nil {
-		if err := m.Pagination.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("pagination")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("pagination")
-			}
-			return err
-		}
+	if err := validate.MinimumInt("attack", "body", *m.Attack, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PokemonSearchRequest) validateDefense(formats strfmt.Registry) error {
+	if swag.IsZero(m.Defense) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("defense", "body", *m.Defense, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PokemonSearchRequest) validateHp(formats strfmt.Registry) error {
+	if swag.IsZero(m.Hp) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("hp", "body", *m.Hp, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -136,33 +171,32 @@ func (m *PokemonSearchRequest) validateSortOrder(formats strfmt.Registry) error 
 	return nil
 }
 
-// ContextValidate validate this pokemon search request based on the context it is used
-func (m *PokemonSearchRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidatePagination(ctx, formats); err != nil {
-		res = append(res, err)
+func (m *PokemonSearchRequest) validateSpecial(formats strfmt.Registry) error {
+	if swag.IsZero(m.Special) { // not required
+		return nil
 	}
 
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
+	if err := validate.MinimumInt("special", "body", *m.Special, 0, false); err != nil {
+		return err
 	}
+
 	return nil
 }
 
-func (m *PokemonSearchRequest) contextValidatePagination(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Pagination != nil {
-		if err := m.Pagination.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("pagination")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("pagination")
-			}
-			return err
-		}
+func (m *PokemonSearchRequest) validateSpeed(formats strfmt.Registry) error {
+	if swag.IsZero(m.Speed) { // not required
+		return nil
 	}
 
+	if err := validate.MinimumInt("speed", "body", *m.Speed, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this pokemon search request based on context it is used
+func (m *PokemonSearchRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

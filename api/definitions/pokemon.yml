@@ -120,26 +120,29 @@ definitions:
         type: integer
         description: filter by hp
         example: 50
+        minimum: 0
       attack:
         type: integer
         description: filter by attack
         example: 60
+        minimum: 0
       defense:
         type: integer
         description: filter by defense
         example: 40
+        minimum: 0
       speed:
         type: integer
         description: filter by speed
         example: 45
+        minimum: 0
       special:
         type: integer
         description: filter by special stat
         example: 65
+        minimum: 0
       sortOrder:
         type: string
         enum: [asc, desc]
         description: sort order for results
         example: asc
-      pagination:
-        $ref: "#/definitions/Pagination"
