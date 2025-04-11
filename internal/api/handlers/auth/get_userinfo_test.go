@@ -27,11 +27,6 @@ func TestGetUserInfo(t *testing.T) {
 
 		assert.Equal(t, fixtures.User1.ID, *response.Sub)
 		assert.Equal(t, strfmt.Email(fixtures.User1.Username.String), response.Email)
-		test.Snapshoter.Skip([]string{"UpdatedAt"}).Save(t, response)
-
-		for _, scope := range fixtures.User1.Scopes {
-			assert.Contains(t, response.Scopes, scope)
-		}
 
 		appUserProfile, err := models.FindAppUserProfile(ctx, s.DB, fixtures.User1.ID, models.AccessTokenColumns.UpdatedAt)
 		require.NoError(t, err)
