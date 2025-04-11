@@ -13,23 +13,23 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewDeletePokemonFromCollectionParams creates a new DeletePokemonFromCollectionParams object
+// NewGetCollectionPokemonDetailParams creates a new GetCollectionPokemonDetailParams object
 // no default values defined in spec.
-func NewDeletePokemonFromCollectionParams() DeletePokemonFromCollectionParams {
+func NewGetCollectionPokemonDetailParams() GetCollectionPokemonDetailParams {
 
-	return DeletePokemonFromCollectionParams{}
+	return GetCollectionPokemonDetailParams{}
 }
 
-// DeletePokemonFromCollectionParams contains all the bound params for the delete pokemon from collection operation
+// GetCollectionPokemonDetailParams contains all the bound params for the get collection pokemon detail operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters deletePokemonFromCollection
-type DeletePokemonFromCollectionParams struct {
+// swagger:parameters getCollectionPokemonDetail
+type GetCollectionPokemonDetailParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*pokemon's ID to delete
+	/*pokemon ID to retrieve details for
 	  Required: true
 	  In: path
 	*/
@@ -39,8 +39,8 @@ type DeletePokemonFromCollectionParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewDeletePokemonFromCollectionParams() beforehand.
-func (o *DeletePokemonFromCollectionParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetCollectionPokemonDetailParams() beforehand.
+func (o *GetCollectionPokemonDetailParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -56,7 +56,7 @@ func (o *DeletePokemonFromCollectionParams) BindRequest(r *http.Request, route *
 	return nil
 }
 
-func (o *DeletePokemonFromCollectionParams) Validate(formats strfmt.Registry) error {
+func (o *GetCollectionPokemonDetailParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// pokemonId
@@ -70,7 +70,7 @@ func (o *DeletePokemonFromCollectionParams) Validate(formats strfmt.Registry) er
 }
 
 // bindPokemonID binds and validates parameter PokemonID from path.
-func (o *DeletePokemonFromCollectionParams) bindPokemonID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCollectionPokemonDetailParams) bindPokemonID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

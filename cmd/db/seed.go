@@ -3,10 +3,13 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"os"
 
 	"github.com/ansiegl/Pok-Nest.git/internal/api"
 	"github.com/ansiegl/Pok-Nest.git/internal/config"
 	"github.com/ansiegl/Pok-Nest.git/internal/data"
+	"github.com/ansiegl/Pok-Nest.git/internal/models"
 	"github.com/ansiegl/Pok-Nest.git/internal/util"
 	"github.com/ansiegl/Pok-Nest.git/internal/util/command"
 	dbutil "github.com/ansiegl/Pok-Nest.git/internal/util/db"
@@ -15,8 +18,10 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
+var pokemonCSVPath string
+
 func newSeed() *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "seed",
 		Short: "Inserts or updates fixtures to the database.",
 		Long:  `Uses upsert to add test data to the current environment.`,
@@ -24,6 +29,10 @@ func newSeed() *cobra.Command {
 			seedCmdFunc()
 		},
 	}
+
+	cmd.Flags().StringVarP(&pokemonCSVPath, "file", "f", "/app/docs/pokemon.csv", "Path to CSV")
+
+	return cmd
 }
 
 func seedCmdFunc() {
@@ -36,8 +45,6 @@ func seedCmdFunc() {
 			return err
 		}
 
-		log.Info().Msg("Successfully applied seed fixtures")
-
 		return nil
 	})
 	if err != nil {
@@ -48,19 +55,38 @@ func seedCmdFunc() {
 func ApplySeedFixtures(ctx context.Context, config config.Server) error {
 	log := util.LogFromContext(ctx)
 
+	log.Info().Str("csvPath", pokemonCSVPath).Msg("CSV Path received")
+
+	if _, err := os.Stat(pokemonCSVPath); os.IsNotExist(err) {
+		return fmt.Errorf("CSV file does not exist: %s", pokemonCSVPath)
+	}
+
 	db, err := sql.Open("postgres", config.Database.ConnectionString())
 	if err != nil {
 		return err
 	}
-
 	defer db.Close()
 
 	if err := db.PingContext(ctx); err != nil {
 		return err
 	}
 
-	// insert fixtures in an auto-managed db transaction
 	return dbutil.WithTransaction(ctx, db, func(tx boil.ContextExecutor) error {
+		pokemonCount, err := models.Pokemons().Count(ctx, tx)
+		log.Info().
+			Int64("pokemonCount", pokemonCount).
+			Msg("Current Pokemon count in database")
+
+		if err != nil {
+			return fmt.Errorf("error checking existing Pokemon: %w", err)
+		}
+
+		if pokemonCount > 0 {
+			log.Info().
+				Int64("existingPokemonCount", pokemonCount).
+				Msg("Pokemon data already exists in the database. Skipping seed.")
+			return nil
+		}
 
 		fixtures := data.Upserts()
 
@@ -71,7 +97,24 @@ func ApplySeedFixtures(ctx context.Context, config config.Server) error {
 			}
 		}
 
-		log.Info().Int("fixturesCount", len(fixtures)).Msg("Successfully upserted fixtures")
+		// get pokemon data
+		pokemons, err := data.LoadPokemonFromCSV(pokemonCSVPath)
+		if err != nil {
+			return fmt.Errorf("failed to load pokemon from CSV: %w", err)
+		}
+
+		for _, pokemon := range pokemons {
+			if err := pokemon.Insert(ctx, tx, boil.Infer()); err != nil {
+				log.Error().Err(err).Msg("Failed to insert pokemon")
+				return err
+			}
+		}
+
+		log.Info().
+			Int("fixturesCount", len(fixtures)).
+			Int("pokemonCount", len(pokemons)).
+			Msg("Successfully upserted fixtures and Pokemon")
+
 		return nil
 	})
 }

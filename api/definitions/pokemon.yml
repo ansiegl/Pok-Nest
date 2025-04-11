@@ -9,32 +9,140 @@ definitions:
     required:
       - pokemon_id
       - name
-      - type_1
-      - generation
-      - legendary
+      - type1
     properties:
       pokemon_id:
         type: string
         format: uuid4
-        description: ID of pokemon
+        description: ID of the pokemon
         example: 891d37d3-c74f-493e-aea8-af73efd92016
+      number:
+        type: integer
+        description: number of pokemon
+        example: 1
       name:
         type: string
         description: name of pokemon
-        example: pikachu
-      type_1:
+        example: Bulbasaur
+      type1:
         type: string
         description: first type of pokemon
-        example: electric
-      type_2:
+        example: Grass
+      type2:
         type: string
         description: second type of pokemon
-        example: flying
-      generation:
+        example: Poison
+      hp:
         type: integer
-        description: generation of pokemon
-        example: 1
-      legendary:
-        type: boolean
-        description: is the pokemon legendary?
-        example: false
+        description: hp of pokemon
+        example: 45
+      attack:
+        type: integer
+        description: attack of pokemon
+        example: 49
+      defense:
+        type: integer
+        description: defense of pokemon
+        example: 49
+      speed:
+        type: integer
+        description: speed of pokemon
+        example: 45
+      special:
+        type: integer
+        description: special of pokemon
+        example: 65
+      gif_url:
+        type: string
+        format: url
+        description: gif of pokemon
+        example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+      image_url:
+        type: string
+        format: url
+        description: png of pokemon
+        example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+      description:
+        type: string
+        description: description of pokemon
+        example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokemon.
+  Pagination:
+    type: object
+    properties:
+      total:
+        type: integer
+        description: total number of pokemon matching the query
+      limit:
+        type: integer
+        description: number of pokemon returned per page
+      offset:
+        type: integer
+        description: number of pokemon skipped before returning results
+  GetPokemonResponse:
+    type: object
+    required:
+      - data
+      - pagination
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/Pokemon"
+        description: list of pokemon objects
+      pagination:
+        $ref: "#/definitions/Pagination"
+  GetDownloadResponse:
+      type: object
+      required:
+        - message
+        - status
+      properties:
+        message:
+          type: string
+          description: Result message of the download operation
+          example: "CSV download successful"
+        status:
+          type: integer
+          description: HTTP status code of the operation
+          example: 200
+  PokemonSearchRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: filter by pokemon name
+        example: Bulbasaur
+      type:
+        type: string
+        description: filter by type
+        example: Grass
+      hp:
+        type: integer
+        description: filter by hp
+        example: 50
+        minimum: 0
+      attack:
+        type: integer
+        description: filter by attack
+        example: 60
+        minimum: 0
+      defense:
+        type: integer
+        description: filter by defense
+        example: 40
+        minimum: 0
+      speed:
+        type: integer
+        description: filter by speed
+        example: 45
+        minimum: 0
+      special:
+        type: integer
+        description: filter by special stat
+        example: 65
+        minimum: 0
+      sortOrder:
+        type: string
+        enum: [asc, desc]
+        description: sort order for results
+        example: asc

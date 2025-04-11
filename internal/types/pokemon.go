@@ -19,48 +19,66 @@ import (
 // swagger:model pokemon
 type Pokemon struct {
 
-	// generation of pokemon
-	// Example: 1
-	// Required: true
-	Generation *int64 `json:"generation"`
+	// attack of pokemon
+	// Example: 49
+	Attack int64 `json:"attack,omitempty"`
 
-	// is the pokemon legendary?
-	// Example: false
-	// Required: true
-	Legendary *bool `json:"legendary"`
+	// defense of pokemon
+	// Example: 49
+	Defense int64 `json:"defense,omitempty"`
+
+	// description of pokemon
+	// Example: A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokemon.
+	Description string `json:"description,omitempty"`
+
+	// gif of pokemon
+	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+	GifURL string `json:"gif_url,omitempty"`
+
+	// hp of pokemon
+	// Example: 45
+	Hp int64 `json:"hp,omitempty"`
+
+	// png of pokemon
+	// Example: https://pokeapi.co/media/sprites/pokemon/other/official-artwork/4.png
+	ImageURL string `json:"image_url,omitempty"`
 
 	// name of pokemon
-	// Example: pikachu
+	// Example: Bulbasaur
 	// Required: true
 	Name *string `json:"name"`
 
-	// ID of pokemon
+	// number of pokemon
+	// Example: 1
+	Number int64 `json:"number,omitempty"`
+
+	// ID of the pokemon
 	// Example: 891d37d3-c74f-493e-aea8-af73efd92016
 	// Required: true
 	// Format: uuid4
 	PokemonID *strfmt.UUID4 `json:"pokemon_id"`
 
+	// special of pokemon
+	// Example: 65
+	Special int64 `json:"special,omitempty"`
+
+	// speed of pokemon
+	// Example: 45
+	Speed int64 `json:"speed,omitempty"`
+
 	// first type of pokemon
-	// Example: electric
+	// Example: Grass
 	// Required: true
-	Type1 *string `json:"type_1"`
+	Type1 *string `json:"type1"`
 
 	// second type of pokemon
-	// Example: flying
-	Type2 string `json:"type_2,omitempty"`
+	// Example: Poison
+	Type2 string `json:"type2,omitempty"`
 }
 
 // Validate validates this pokemon
 func (m *Pokemon) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateGeneration(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLegendary(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
@@ -77,24 +95,6 @@ func (m *Pokemon) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Pokemon) validateGeneration(formats strfmt.Registry) error {
-
-	if err := validate.Required("generation", "body", m.Generation); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Pokemon) validateLegendary(formats strfmt.Registry) error {
-
-	if err := validate.Required("legendary", "body", m.Legendary); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -122,7 +122,7 @@ func (m *Pokemon) validatePokemonID(formats strfmt.Registry) error {
 
 func (m *Pokemon) validateType1(formats strfmt.Registry) error {
 
-	if err := validate.Required("type_1", "body", m.Type1); err != nil {
+	if err := validate.Required("type1", "body", m.Type1); err != nil {
 		return err
 	}
 

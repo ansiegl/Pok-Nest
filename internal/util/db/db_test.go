@@ -38,6 +38,11 @@ func TestWithTransactionSuccess(t *testing.T) {
 			require.NoError(t, err)
 			assert.Equal(t, count+1, newCount)
 
+			_, err = models.CollectionPokemons().DeleteAll(ctx, tx)
+			if err != nil {
+				return err
+			}
+
 			delCnt, err := models.Users().DeleteAll(ctx, tx)
 			if err != nil {
 				return err
@@ -79,6 +84,9 @@ func TestWithTransactionWithError(t *testing.T) {
 			newCount, err := models.Users().Count(ctx, tx)
 			require.NoError(t, err)
 			assert.Equal(t, count+1, newCount)
+
+			_, err = models.CollectionPokemons().DeleteAll(ctx, tx)
+			require.NoError(t, err)
 
 			delCnt, err := models.Users().DeleteAll(ctx, tx)
 			require.NoError(t, err)
@@ -126,6 +134,9 @@ func TestWithTransactionWithPanic(t *testing.T) {
 				newCount, err := models.Users().Count(ctx, tx)
 				require.NoError(t, err)
 				assert.Equal(t, count+1, newCount)
+
+				_, err = models.CollectionPokemons().DeleteAll(ctx, tx)
+				require.NoError(t, err)
 
 				delCnt, err := models.Users().DeleteAll(ctx, tx)
 				require.NoError(t, err)

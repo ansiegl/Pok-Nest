@@ -35,8 +35,8 @@ type PostAddPokemonToCollectionParams struct {
 	/*
 	  In: body
 	*/
-	Caught *types.Collection
-	/*Pokémon's ID to add to the collection
+	Body *types.PokemonBody
+	/*pokemon's ID to add to the collection
 	  Required: true
 	  In: path
 	*/
@@ -54,9 +54,9 @@ func (o *PostAddPokemonToCollectionParams) BindRequest(r *http.Request, route *m
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body types.Collection
+		var body types.PokemonBody
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			res = append(res, errors.NewParseError("caught", "body", "", err))
+			res = append(res, errors.NewParseError("body", "body", "", err))
 		} else {
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
@@ -64,7 +64,7 @@ func (o *PostAddPokemonToCollectionParams) BindRequest(r *http.Request, route *m
 			}
 
 			if len(res) == 0 {
-				o.Caught = &body
+				o.Body = &body
 			}
 		}
 	}
@@ -82,11 +82,11 @@ func (o *PostAddPokemonToCollectionParams) BindRequest(r *http.Request, route *m
 func (o *PostAddPokemonToCollectionParams) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	// caught
+	// body
 	// Required: false
 
 	// body is validated in endpoint
-	//if err := o.Caught.Validate(formats); err != nil {
+	//if err := o.Body.Validate(formats); err != nil {
 	//  res = append(res, err)
 	//}
 
