@@ -715,6 +715,35 @@ definitions:
     - sub
     - updated_at
     properties:
+      collectionStats:
+        description: stats about collection
+        type: object
+        properties:
+          firstTypes:
+            description: count of collected pokemon by first type
+            type: object
+            additionalProperties:
+              type: integer
+            example:
+              Fire: 7
+              Grass: 4
+              Normal: 6
+              Water: 5
+          missingFromDatabase:
+            type: integer
+            example: 30
+          secTypes:
+            description: count of collected pokemon by second type
+            type: object
+            additionalProperties:
+              type: integer
+            example:
+              Flying: 8
+              Ground: 2
+              Poison: 3
+          totalCollected:
+            type: integer
+            example: 75
       email:
         description: Email address of user, if available
         type: string

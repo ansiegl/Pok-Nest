@@ -21,6 +21,9 @@ import (
 // swagger:model getUserInfoResponse
 type GetUserInfoResponse struct {
 
+	// collection stats
+	CollectionStats *GetUserInfoResponseCollectionStats `json:"collectionStats,omitempty"`
+
 	// Email address of user, if available
 	// Example: user@example.com
 	// Max Length: 255
@@ -46,6 +49,10 @@ type GetUserInfoResponse struct {
 func (m *GetUserInfoResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCollectionStats(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateEmail(formats); err != nil {
 		res = append(res, err)
 	}
@@ -65,6 +72,25 @@ func (m *GetUserInfoResponse) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *GetUserInfoResponse) validateCollectionStats(formats strfmt.Registry) error {
+	if swag.IsZero(m.CollectionStats) { // not required
+		return nil
+	}
+
+	if m.CollectionStats != nil {
+		if err := m.CollectionStats.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collectionStats")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collectionStats")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -138,8 +164,33 @@ func (m *GetUserInfoResponse) validateUpdatedAt(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this get user info response based on context it is used
+// ContextValidate validate this get user info response based on the context it is used
 func (m *GetUserInfoResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCollectionStats(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GetUserInfoResponse) contextValidateCollectionStats(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.CollectionStats != nil {
+		if err := m.CollectionStats.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("collectionStats")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("collectionStats")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -154,6 +205,56 @@ func (m *GetUserInfoResponse) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *GetUserInfoResponse) UnmarshalBinary(b []byte) error {
 	var res GetUserInfoResponse
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GetUserInfoResponseCollectionStats stats about collection
+//
+// swagger:model GetUserInfoResponseCollectionStats
+type GetUserInfoResponseCollectionStats struct {
+
+	// count of collected pokemon by first type
+	// Example: {"Fire":7,"Grass":4,"Normal":6,"Water":5}
+	FirstTypes map[string]int64 `json:"firstTypes,omitempty"`
+
+	// missing from database
+	// Example: 30
+	MissingFromDatabase int64 `json:"missingFromDatabase,omitempty"`
+
+	// count of collected pokemon by second type
+	// Example: {"Flying":8,"Ground":2,"Poison":3}
+	SecTypes map[string]int64 `json:"secTypes,omitempty"`
+
+	// total collected
+	// Example: 75
+	TotalCollected int64 `json:"totalCollected,omitempty"`
+}
+
+// Validate validates this get user info response collection stats
+func (m *GetUserInfoResponseCollectionStats) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get user info response collection stats based on context it is used
+func (m *GetUserInfoResponseCollectionStats) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GetUserInfoResponseCollectionStats) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GetUserInfoResponseCollectionStats) UnmarshalBinary(b []byte) error {
+	var res GetUserInfoResponseCollectionStats
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

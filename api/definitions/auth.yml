@@ -54,6 +54,35 @@ definitions:
             - "cms"
         description: Auth-Scopes of the user, if available
         example: ["app"]
+      collectionStats:
+        type: object
+        description: stats about collection
+        properties:
+          totalCollected:
+            type: integer
+            example: 75
+          missingFromDatabase:
+            type: integer
+            example: 30
+          firstTypes:
+            type: object
+            description: count of collected pokemon by first type
+            additionalProperties:
+              type: integer
+            example:
+              Fire: 7
+              Water: 5
+              Grass: 4
+              Normal: 6
+          secTypes:
+            type: object
+            description: count of collected pokemon by second type
+            additionalProperties:
+              type: integer
+            example:
+              Flying: 8
+              Poison: 3
+              Ground: 2
   PostChangePasswordPayload:
     type: object
     required:
@@ -184,3 +213,4 @@ definitions:
         maxLength: 255
         minLength: 1
         example: user@example.com
+
