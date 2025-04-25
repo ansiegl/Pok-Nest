@@ -50,7 +50,7 @@ func getCollectionPokemonHandler(s *api.Server) echo.HandlerFunc {
 
 		queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
 
-		totalCount, err := models.CollectionPokemons().Count(ctx, s.DB)
+		totalCount, err := models.CollectionPokemons(qm.Where("user_id = ?", user.ID)).Count(ctx, s.DB)
 		if err != nil {
 			log.Err(err).Msg("Failed to get total count of collection pokemon")
 			return err
